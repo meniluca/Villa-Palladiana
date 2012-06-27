@@ -27,6 +27,17 @@ Drawer.prototype.draw = function(){
 	return DRAW(STRUCT(this.modelList));
 }
 
+/*
+	Object used to set proportion
+*/
+function Scale(){}
+
+var scale = new Scale();
+
+scale.proportion = 1;
+
+console.log(scale.proportion);
+
 
 /*
 	The main structure
@@ -34,7 +45,7 @@ Drawer.prototype.draw = function(){
 
 function mainStructure(){
 
-	var 
+	//var 
 
 	return 
 
