@@ -16,17 +16,39 @@
 	Drawer object responsable to draw villa's parts.
 */
 function Drawer(){
-	this.modelList = [];
+	this.mainStructure = undefined;
+	this.porches = undefined;
 }
 
-Drawer.prototype.addModel = function(newModelList){
-	this.modelList = this.modelList.concat(newModelList);
+Drawer.prototype.addMainStructure = function(mainStructure){
+	this.mainStructure = mainStructure;
 }
 
-Drawer.prototype.draw = function(){
-	return DRAW(STRUCT(this.modelList));
+Drawer.prototype.drawMainStructure = function(){
+	if (this.mainStructure === undefined){
+		alert("Create the model before draw it!");
+		return;
+	}
+	return DRAW(this.mainStructure);
 }
 
+
+Drawer.prototype.addPorches = function(porches){
+	this.porches = porches;
+}
+
+Drawer.prototype.drawPorches = function(){
+	if (this.porches === undefined){
+		alert("Create the model before draw it!");
+		return;
+	}
+	return DRAW(this.porches);
+}
+
+
+Drawer.prototype.drawAll = function(){
+	return DRAW(STRUCT([this.mainStructure,this.porches]));
+}
 
 /*
 	Object stateless used to set proportion
@@ -35,7 +57,7 @@ function Scale(){};
 
 var scale = new Scale();
 
-scale.proportion = 20;
+scale.proportion = 2;
 
 
 /*
@@ -43,6 +65,9 @@ scale.proportion = 20;
 */
 
 function mainStructure(){
+
+	// An empty struct that will be filled and returned
+	var modelList = STRUCT([]);
 
 	// Get proportion
 	var p = scale.proportion;
@@ -54,8 +79,11 @@ function mainStructure(){
 						SIMPLEX_GRID([[2.24*p],[3.46*p],[h*p]]),
 						SIMPLEX_GRID([[-0.18*p,2.2*p],[-0.2*p,3.1*p],[-h*p,0.1*p]]),
 						SIMPLEX_GRID([[-2.38*p,0.32*p],[-0.72*p,2.02*p],[(h+0.1)*p]]),
-						SIMPLEX_GRID([[-2.7*p,0.22*p],[-0.86*p,1.74*p],[(h+0.1)*p]])
+						SIMPLEX_GRID([[-2.7*p,0.22*p],[-0.86*p,1.74*p],[(h+0.1)*p]]),
+						SIMPLEX_GRID([[-3.08*p,0.26*p],[-1.05*p,1.36*p],[(h+0.1)*p]])
 					 ];
+
+	modelList = STRUCT(foundation);
 
 	// STAIRS
 
@@ -64,10 +92,10 @@ function mainStructure(){
 
 	var controlsStep = [
 			[0*p,0*p,hs*p],
-			[0*p,0.035*p,hs*p],[0*p,0.035*p,hs*p],[0*p,0.035*p,hs*p],
-			[0*p,0.035*p,(hs-0.005)*p],[0*p,0.035*p,(hs-0.005)*p],
-			[0*p,0.03*p,(hs-0.005)*p],[0*p,0.03*p,(hs-0.005)*p],[0*p,0.03*p,(hs-0.005)*p],[0*p,0.03*p,(hs-0.005)*p],
-			[0*p,0.03*p,0*p]
+			[0.04*p,0*p,hs*p],[0.04*p,0*p,hs*p],[0.04*p,0*p,hs*p],
+			[0.04*p,0*p,(hs-0.005)*p],[0.04*p,0*p,(hs-0.005)*p],
+			[0.035*p,0*p,(hs-0.005)*p],[0.035*p,0*p,(hs-0.005)*p],[0.035*p,0*p,(hs-0.005)*p],[0.035*p,0*p,(hs-0.005)*p],
+			[0.035*p,0*p,0*p]
 		];
 
 	var stepProfile = BEZIER(S0)(controlsStep);
@@ -75,17 +103,22 @@ function mainStructure(){
 	var domain2Dstep = DOMAIN([[0,1],[0,1]])([10,1]);
 
 	// Defines steps with different width
-	var step = MAP(CYLINDRICAL_SURFACE(stepProfile)([1.28*p,0,0]))(domain2Dstep);
-	var stepLittle = MAP(CYLINDRICAL_SURFACE(stepProfile)([0.28*p,0,0]))(domain2Dstep);
+	var step = MAP(CYLINDRICAL_SURFACE(stepProfile)([0,1.28*p,0]))(domain2Dstep);
+	var stepLittle = MAP(CYLINDRICAL_SURFACE(stepProfile)([0,0.28*p,0]))(domain2Dstep);
 
-	//delete: DRAW(COLOR([1,0,0])(POLYPOINT([[0,0.035*p]])));
+	// Translate and repeat steps
+	step = T([0,1])([3.6*p,1.09*p])(step);
+	var t = T([0,2])([-0.035*p,hs*p]); 
+	step = STRUCT([step, t, step, t, step, t, step, t, step, t, step, t, step, t, step, t, step]);
+
+	modelList = STRUCT([modelList,step]);
 
 	//var stairs
 	//var building
 	//var porch
 	//var roof
 
-	return step;
+	return modelList;
 
 }
 
@@ -94,8 +127,8 @@ function mainStructure(){
 */
 function drawVilla(){
 	var drawer = new Drawer();
-	drawer.addModel(mainStructure());
-	drawer.draw();
+	drawer.addMainStructure(mainStructure());
+	drawer.drawMainStructure();
 }
 
 drawVilla();
