@@ -77,9 +77,9 @@ function mainStructure(){
 
 	var foundation = [
 						SIMPLEX_GRID([[2.24*p],[3.46*p],[h*p]]),
-						SIMPLEX_GRID([[-0.18*p,2.2*p],[-0.2*p,3.1*p],[-h*p,0.1*p]]),
-						SIMPLEX_GRID([[-2.38*p,0.32*p],[-0.72*p,2.02*p],[(h+0.1)*p]]),
-						SIMPLEX_GRID([[-2.7*p,0.22*p],[-0.86*p,1.74*p],[(h+0.1)*p]]),
+						SIMPLEX_GRID([[-0.18*p,2.2*p],[-0.2*p,3.1*p],[-h*p,0.08885*p]]),
+						SIMPLEX_GRID([[-2.38*p,0.32*p],[-0.72*p,2.02*p],[(h+0.08885)*p]]),
+						SIMPLEX_GRID([[-2.7*p,0.22*p],[-0.86*p,1.74*p],[(h+0.08885)*p]]),
 						SIMPLEX_GRID([[-3.08*p,0.26*p],[-1.05*p,1.36*p],[h*p]])
 					 ];
 
@@ -109,9 +109,11 @@ function mainStructure(){
 	// Translate and repeat steps
 	step = T([0,1])([3.6*p,1.09*p])(step);
 	var t = T([0,2])([-0.035*p,hs*p]);
+	var t2 = T([0,2])([-0.275*p,hs*p]);
 	// first 9 steps in front of the villa
-	step = STRUCT([step, t, step, t, step, t, step, t, step, t, step, t, step, t, step, t, step]);
-	// second 
+	step = STRUCT([step, t, step, t, step, t, step, t, step, t, step, t, step, t, step, t, step,
+					t2, step, t, step, t, step, t, step, t, step]);
+
 
 	modelList = STRUCT([modelList,step]);
 
