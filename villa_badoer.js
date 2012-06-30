@@ -78,7 +78,7 @@ function mainStructure(){
     var h1 = 0.16;
     var h2 = 0.08885;
 
-    var foundation = [
+	var foundation = [
 					SIMPLEX_GRID([[2.38*p],[3.46*p],[h1*p]]), // A
 					SIMPLEX_GRID([[-0.18*p,2.2*p],[-0.18*p,3.1*p],[-h1*p,h2*p]]), // B
 					SIMPLEX_GRID([[-2.38*p,0.32*p],[-0.72*p,2.02*p],[(h1+h2)*p]]), // C
@@ -151,13 +151,13 @@ function mainStructure(){
 
  	// RAILS
 
-function getRailBase(p,hs,lenBase,h,offset){
+	function getRailBase(p,hs,lenBase,h,offset){
 
-		var lenBase = lenBase - 0.005*2*p;
+		var lenBase = lenBase - 0.005;
 		var hs = hs;
 		var h = h;
 
-		domain2D = DOMAIN([[0,1],[0,1]])([20,1]);
+		domain2D = DOMAIN([[0,1],[0,1]])([10,1]);
 
 		// hs**p
 
@@ -176,33 +176,85 @@ function getRailBase(p,hs,lenBase,h,offset){
 
 
 		return STRUCT([
-					MAP(BEZIER(S1)([corner1,corner2]))(domain2D),
-					MAP(BEZIER(S1)([corner3,corner1]))(domain2D),
-					MAP(BEZIER(S1)([corner3,corner4]))(domain2D),
-					MAP(BEZIER(S1)([corner2,corner4]))(domain2D),
+				MAP(BEZIER(S1)([corner1,corner2]))(domain2D),
+				MAP(BEZIER(S1)([corner3,corner1]))(domain2D),
+				MAP(BEZIER(S1)([corner3,corner4]))(domain2D),
+				MAP(BEZIER(S1)([corner2,corner4]))(domain2D),
 
-					TRIANGLE_DOMAIN(1,[[0,0,(hs)*p],[0.04*p,0,(hs)*p],[0.04*p,(lenBase+0.005)*p,(hs+h)*p]]), //copertura sotto
-					TRIANGLE_DOMAIN(1,[[0,0,(hs)*p],[0,(lenBase+0.005)*p,(hs+h)*p],[0.04*p,(lenBase+0.005)*p,(hs+h)*p]]),
-					TRIANGLE_DOMAIN(1,[[0.0025*p,0.0025*p,(0.005+hs+offset)*p],[0.0025*p,(lenBase+0.0025)*p,(0.005+hs+h-offset)*p],
-										[0.0375*p,(lenBase+0.0025)*p,(0.005+hs+h-offset)*p]]), //copertura sopra
-					TRIANGLE_DOMAIN(1,[[0.0025*p,0.0025*p,(0.005+hs+offset)*p],[0.0375*p,0.0025*p,(0.005+hs+offset)*p],
-										[0.0375*p,(lenBase+0.0025)*p,(0.005+hs+h-offset)*p]]),
-					// bordo
-					TRIANGLE_DOMAIN(1,[[0,0,0],[0,0,hs*p],[0.04*p,0,0]]), //A
-					TRIANGLE_DOMAIN(1,[[0.04*p,0,hs*p],[0,0,hs*p],[0.04*p,0,0]]),
-					TRIANGLE_DOMAIN(1,[[0.04*p,0,hs*p],[0.04*p,(lenBase+0.005)*p,(hs+h)*p],[0.04*p,0,0]]), //B
-					TRIANGLE_DOMAIN(1,[[0.04*p,0,0],[0.04*p,(lenBase+0.005)*p,h*p],[0.04*p,(lenBase+0.005)*p,(hs+h)*p]]),
-					TRIANGLE_DOMAIN(1,[[0,(lenBase+0.005)*p,h*p],[0,(lenBase+0.005)*p,(hs+h)*p],[0.04*p,(lenBase+0.005)*p,h*p]]), //C
-					TRIANGLE_DOMAIN(1,[[0.04*p,(lenBase+0.005)*p,(hs+h)*p],[0,(lenBase+0.005)*p,(hs+h)*p],[0.04*p,(lenBase+0.005)*p,h*p]]),
-					TRIANGLE_DOMAIN(1,[[0,0,hs*p],[0,(lenBase+0.005)*p,(hs+h)*p],[0,0,0]]), //D
-					TRIANGLE_DOMAIN(1,[[0,0,0],[0,(lenBase+0.005)*p,h*p],[0,(lenBase+0.005)*p,(hs+h)*p]]),
-				]);
+				TRIANGLE_DOMAIN(1,[[0,0,(hs)*p],[0.04*p,0,(hs)*p],[0.04*p,(lenBase+0.005)*p,(hs+h)*p]]), //copertura sotto
+				TRIANGLE_DOMAIN(1,[[0,0,(hs)*p],[0,(lenBase+0.005)*p,(hs+h)*p],[0.04*p,(lenBase+0.005)*p,(hs+h)*p]]),
+				TRIANGLE_DOMAIN(1,[[0.0025*p,0.0025*p,(0.005+hs+offset)*p],[0.0025*p,(lenBase+0.0025)*p,(0.005+hs+h-offset)*p],
+									[0.0375*p,(lenBase+0.0025)*p,(0.005+hs+h-offset)*p]]), //copertura sopra
+				TRIANGLE_DOMAIN(1,[[0.0025*p,0.0025*p,(0.005+hs+offset)*p],[0.0375*p,0.0025*p,(0.005+hs+offset)*p],
+									[0.0375*p,(lenBase+0.0025)*p,(0.005+hs+h-offset)*p]]),
+				// bordo
+				TRIANGLE_DOMAIN(1,[[0,0,0],[0,0,hs*p],[0.04*p,0,0]]), //A
+				TRIANGLE_DOMAIN(1,[[0.04*p,0,hs*p],[0,0,hs*p],[0.04*p,0,0]]),
+				TRIANGLE_DOMAIN(1,[[0.04*p,0,hs*p],[0.04*p,(lenBase+0.005)*p,(hs+h)*p],[0.04*p,0,0]]), //B
+				TRIANGLE_DOMAIN(1,[[0.04*p,0,0],[0.04*p,(lenBase+0.005)*p,h*p],[0.04*p,(lenBase+0.005)*p,(hs+h)*p]]),
+				TRIANGLE_DOMAIN(1,[[0,(lenBase+0.005)*p,h*p],[0,(lenBase+0.005)*p,(hs+h)*p],[0.04*p,(lenBase+0.005)*p,h*p]]), //C
+				TRIANGLE_DOMAIN(1,[[0.04*p,(lenBase+0.005)*p,(hs+h)*p],[0,(lenBase+0.005)*p,(hs+h)*p],[0.04*p,(lenBase+0.005)*p,h*p]]),
+				TRIANGLE_DOMAIN(1,[[0,0,hs*p],[0,(lenBase+0.005)*p,(hs+h)*p],[0,0,0]]), //D
+				TRIANGLE_DOMAIN(1,[[0,0,0],[0,(lenBase+0.005)*p,h*p],[0,(lenBase+0.005)*p,(hs+h)*p]]),
+		]);
 
     }
 
 	DRAW(SIMPLEX_GRID([[-2.66*p,0.04*p],[-0.24*p,0.48*p,-2.02*p,0.48*p],[hs*2*p]]));
 	DRAW(SIMPLEX_GRID([[-3.34*p,0.29*p],[-1.05*p,0.04*p,-1.28*p,0.04*p],[hs*2*p]]));
 
+	// Rail left divided in parts, from the bottom till the top one
+	var railLeft1 = getRailBase(p,hs,0.29,h1,0.0015);
+	railLeft1 = T([0,1])([3.63*p,1.05*p])(R([0,1])(PI/2)(railLeft1));
+
+	var railLeft2 = getRailBase(p,hs,0.27,0,0);
+	railLeft2 = T([0,1,2])([3.34*p,1.05*p,h1*p])(R([0,1])(PI/2)(railLeft2));
+
+	var railLeft3 = getRailBase(p,hs,0.15,h2,0.0015);
+	railLeft3 = T([0,1,2])([3.07*p,1.05*p,h1*p])(R([0,1])(PI/2)(railLeft3));
+
+	var railLeft4 = getRailBase(p,hs,0.23,0,0);
+	railLeft4 = T([0,1,2])([2.88*p,0.86*p,(h2+h1)*p])(railLeft4);
+	
+	var railLeft5 = getRailBase(p,hs,0.26,0,0);
+	railLeft5 = T([0,1,2])([2.92*p,0.86*p,(h2+h1)*p])(R([0,1])(PI/2)(railLeft5));
+
+	var railLeft6 = getRailBase(p,hs,0.18,0,0);
+	railLeft6 = T([0,1,2])([2.66*p,0.72*p,(h2+h1)*p])(railLeft6);
+
+	var railLeft7 = getRailBase(p,hs,0.48,(h1+h2),0.0015);
+	railLeft7 = T([0,1])([2.66*p,0.24*p])(railLeft7);
+
+	var railLeft8 = getRailBase(p,hs,0.32,10*hs,0.0015);
+	railLeft8 = T([0,1,2])([2.515*p,1.05*p,(h1+h2)*p])(R([0,1])(PI/2)(railLeft8));
+
+	var railLeft9 = getRailBase(p,hs,0.52,0,0);
+	railLeft9 = T([0,1,2])([2.34*p,0.18*p,(h1+h2)*p])(railLeft9);
+
+	//finire rails left
+
+	var modelRailsLeft = STRUCT([railLeft1,railLeft2,railLeft3,railLeft4,railLeft5,railLeft6,railLeft7,railLeft8,railLeft9]);
+
+	var modelRailsRight = T([1])([3.46*p])(S([1])([-1])(modelRailsLeft));
+
+    modelList = STRUCT([modelList,modelRailsLeft,modelRailsRight]);
+
+    // Walls under the strairs
+
+    var wallsLeft = STRUCT([TRIANGLE_DOMAIN(1,[[2.7*p,0.24*p,0],[2.7*p,0.72*p,0.035*p],[2.7*p,0.72*p,(h1+h2)*p]]), //lateral stair
+    					//TRIANGLE_DOMAIN(1,[[2.7*p,0.24*p,0],[2.7*p,0.72*p,0.035*p],[2.7*p,0.72*p,(h1+h2)*p]]), //duplicate understair
+    					TRIANGLE_DOMAIN(1,[[3.63*p,1.05*p,0],[3.34*p,1.05*p,0.035*p],[3.34*p,1.05*p,(h1)*p]]),
+    					//TRIANGLE_DOMAIN(1,[[3.63*p,1.05*p,0],[3.34*p,1.05*p,0.035*p],[3.34*p,1.05*p,(h1)*p]]) //duplicate understair
+    					TRIANGLE_DOMAIN(1,[[3.07*p,1.05*p,0],[2.92*p,1.05*p,0],[2.92*p,1.05*p,(h1+h2)*p]]),
+    					TRIANGLE_DOMAIN(1,[[3.07*p,1.05*p,0],[3.07*p,1.05*p,h1*p],[2.92*p,1.05*p,(h1+h2)*p]]),
+
+    					TRIANGLE_DOMAIN(1,[[2.515*p,1.05*p,(h1+h2)*p],[2.195*p,1.05*p,(h1+h2+10*hs)*p],[2.195*p,1.05*p,(h1+h2)*p]]), //lodgestairs
+
+    					]);
+
+	var wallsRight = T([1])([3.46*p])(S([1])([-1])(wallsLeft));
+
+    modelList = STRUCT([modelList, wallsLeft, wallsRight]);
 
 
 	//var stairs
@@ -224,6 +276,7 @@ function drawVilla(){
 }
 
 drawVilla();
+
 
 
 // TO DELETE:
