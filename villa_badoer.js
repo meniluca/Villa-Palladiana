@@ -318,24 +318,36 @@ function mainStructure(){
 	railLeftTop5 = T([0,1,2])([2.92*p,0.86*p,(h1+h2+8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop5));
 
 	var railLeft6 = getRailBase(p,hs,0.18,0,0);
+	var railLeftTop6 = getRailTop(p,hs,0.18,0.04,0,0);
 	railLeft6 = T([0,1,2])([2.66*p,0.72*p,(h2+h1)*p])(railLeft6);
+	railLeftTop6 = T([0,1,2])([2.66*p,0.72*p,(h1+h2+8*hs+0.005)*p])(railLeftTop6);
 
 	var railLeft7 = getRailBase(p,hs,0.48,(h1+h2),0.0015);
-	railLeft7 = T([0,1])([2.66*p,0.24*p])(railLeft7);
+	var railLeftTop7 = getRailTop(p,hs,0.455,0.04,(h1+h2),0.0025);
+	railLeft7 = T([0,1])([2.66*p,0.25*p])(railLeft7);
+	railLeftTop7 = T([0,1,2])([2.66*p,0.25*p,(8*hs+0.005)*p])(railLeftTop7);
 
 	var railLeft8 = getRailBase(p,hs,0.32,10*hs,0.0015);
-	railLeft8 = T([0,1,2])([2.515*p,1.05*p,(h1+h2)*p])(R([0,1])(PI/2)(railLeft8));
+	var railLeftTop8 = getRailTop(p,hs,0.27,0.04,10.05*hs,0.0026);
+	railLeft8 = T([0,1,2])([2.52*p,1.05*p,(h1+h2)*p])(R([0,1])(PI/2)(railLeft8));
+	railLeftTop8 = T([0,1,2])([2.51*p,1.05*p,(h1+h2+8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop8));
 
 	var railLeft9 = getRailBase(p,hs,0.52,0,0);
+	var railLeftTop9 = getRailTop(p,hs,0.52,0.04,0,0);
 	railLeft9 = T([0,1,2])([2.34*p,0.18*p,(h1+h2)*p])(railLeft9);
+	railLeftTop9 = T([0,1,2])([2.34*p,0.18*p,(h1+h2+8*hs+0.005)*p])(railLeftTop9);
 
 	//finire rails left
 
-	var modelRailsLeft = STRUCT([railLeft1,railLeftTop1,railLeft2,railLeftTop2,
+	var modelRailsLeft = STRUCT([railLeft1,railLeftTop1,
+								 railLeft2,railLeftTop2,
 								 railLeft3,railLeftTop3,
 								 railLeft4,railLeftTop4,
 								 railLeft5,railLeftTop5,
-								 railLeft6,railLeft7,railLeft8,railLeft9]);
+								 railLeft6,railLeftTop6,
+								 railLeft7,railLeftTop7,
+								 railLeft8,railLeftTop8,
+								 railLeft9,railLeftTop9]);
 
 	var modelRailsRight = T([1])([3.46*p])(S([1])([-1])(modelRailsLeft));
 
@@ -365,7 +377,11 @@ function mainStructure(){
 								 T([0,1,2])([-0.71*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair),
 								 T([0,1,2])([-0.93*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair),
 								 T([0,1,2])([-0.93*p,-0.35*p,(h1+h2-hs)*p])(pillarStructStair),
-								 T([0,1,2])([-0.93*p,-0.83*p,0])(pillarStruct),
+								 T([0,1,2])([-0.93*p,-0.81*p,0])(pillarStruct),
+								 T([0,2])([-1.39*p,(h1+h2+9*hs)*p])(pillarStruct),
+								 T([0,2])([-1.11*p,(h1+h2)*p])(pillarStruct),
+								 T([0,1,2])([-1.25*p,-0.37*p,(h1+h2-hs)*p])(pillarStruct),
+								 T([0,1,2])([-1.25*p,-0.87*p,(h1+h2-hs)*p])(pillarStructStair),
 								 ]);
 
 
@@ -385,7 +401,7 @@ function mainStructure(){
     					TRIANGLE_DOMAIN(1,[[3.07*p,1.05*p,0],[2.92*p,1.05*p,0],[2.92*p,1.05*p,(h1+h2)*p]]),
     					TRIANGLE_DOMAIN(1,[[3.07*p,1.05*p,0],[3.07*p,1.05*p,h1*p],[2.92*p,1.05*p,(h1+h2)*p]]),
 
-    					TRIANGLE_DOMAIN(1,[[2.515*p,1.05*p,(h1+h2)*p],[2.195*p,1.05*p,(h1+h2+10*hs)*p],[2.195*p,1.05*p,(h1+h2)*p]]), //lodgestairs
+    					TRIANGLE_DOMAIN(1,[[2.52*p,1.05*p,(h1+h2)*p],[2.195*p,1.05*p,(h1+h2+10.2*hs)*p],[2.195*p,1.05*p,(h1+h2)*p]]), //lodgestairs
 
     					]);
 
