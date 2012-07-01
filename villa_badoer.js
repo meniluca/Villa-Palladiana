@@ -298,16 +298,20 @@ function mainStructure(){
 	railLeftTop1 = T([0,1,2])([3.62*p,1.05*p,(8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop1));
 
 	var railLeft2 = getRailBase(p,hs,0.27,0,0);
-	var railLeftTop2 = getRailTop(p,hs,0.27,0.04,0,0);
+	var railLeftTop2 = getRailTop(p,hs,0.26,0.04,0,0);
 	railLeft2 = T([0,1,2])([3.34*p,1.05*p,h1*p])(R([0,1])(PI/2)(railLeft2));
 	railLeftTop2 = T([0,1,2])([3.34*p,1.05*p,(h1+8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop2));
 
 	var railLeft3 = getRailBase(p,hs,0.15,h2,0.0015);
+	var railLeftTop3 = getRailTop(p,hs,0.155,0.04,h2,0.0025);
 	railLeft3 = T([0,1,2])([3.07*p,1.05*p,h1*p])(R([0,1])(PI/2)(railLeft3));
+	railLeftTop3 = T([0,1,2])([3.0725*p,1.05*p,(h1+8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop3));
 
 	var railLeft4 = getRailBase(p,hs,0.23,0,0);
+	var railLeftTop4 = getRailTop(p,hs,0.23,0.04,0,0);
 	railLeft4 = T([0,1,2])([2.88*p,0.86*p,(h2+h1)*p])(railLeft4);
-	
+	railLeftTop4 = T([0,1,2])([2.88*p,0.86*p,(h1+h2+8*hs+0.005)*p])(railLeftTop4);
+
 	var railLeft5 = getRailBase(p,hs,0.26,0,0);
 	railLeft5 = T([0,1,2])([2.92*p,0.86*p,(h2+h1)*p])(R([0,1])(PI/2)(railLeft5));
 
@@ -326,7 +330,9 @@ function mainStructure(){
 	//finire rails left
 
 	var modelRailsLeft = STRUCT([railLeft1,railLeftTop1,railLeft2,railLeftTop2,
-								 railLeft3,railLeft4,railLeft5,railLeft6,railLeft7,railLeft8,railLeft9]);
+								 railLeft3,railLeftTop3,
+								 railLeft4,railLeftTop4,
+								 railLeft5,railLeft6,railLeft7,railLeft8,railLeft9]);
 
 	var modelRailsRight = T([1])([3.46*p])(S([1])([-1])(modelRailsLeft));
 
@@ -345,14 +351,21 @@ function mainStructure(){
 	pillarBase = T([0,1])([3.585*p,1.045*p])(pillarBase);
 	var pillarTop = getRailTop(p,hs,0.05,0.05,0,0);
 	pillarTop = T([0,1,2])([3.585*p,1.045*p,((9*hs+0.005))*p])(pillarTop);
-	var pillarStruct = STRUCT([pillar,pillarTop,pillarBase,pillarBaseFrieze]);
+	var pillarStructStair = STRUCT([pillar,pillarTop,pillarBaseFrieze]);
+	var pillarStruct = STRUCT([pillarStructStair,pillarBase]);
 
-	var setPillarsLeft = STRUCT([pillarStruct])
+	// all pillars in a struct
+	var modelPillarsLeft = STRUCT([pillarStruct,
+								 T([0,2])([-0.29*p,(h1-hs)*p])(pillarStructStair),
+								 T([0,2])([-0.52*p,(h1-hs)*p])(pillarStructStair),
+								 T([0,2])([-0.71*p,(h1+h2-hs)*p])(pillarStructStair),
+								 ]);
 
-	var setPillarsRight = STRUCT([]);
+
+	var modelPillarsRight = T([1])([3.46*p])(S([1])([-1])(modelPillarsLeft));
 
 	// adding a single pillar
-	modelList = STRUCT([modelList,setPillarsLeft,setPillarsRight]);
+	modelList = STRUCT([modelList,modelPillarsLeft,modelPillarsRight]);
 
     // WALLS
 
