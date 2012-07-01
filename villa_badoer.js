@@ -72,7 +72,9 @@ function mainStructure(){
     // Get proportion
     var p = scale.proportion || 1;
 
+    //
     // FOUNDATION
+    //
 
     // height foundation steps
     var h1 = 0.16;
@@ -148,8 +150,9 @@ function mainStructure(){
     // BUG: cannot add it in the struct
     DRAW(lodgefloor); //    modelList = STRUCT([modelList,lodgefloor]);
 
-
+    //
  	// RAILS
+ 	//
 
 	function getRailBase(p,hs,lenBase,h,offset){
 
@@ -200,15 +203,104 @@ function mainStructure(){
 
     }
 
+    function getRailTop(p, hs, lenBase, widBase, height, offset){
+
+		var lenBase = lenBase - 0.005*2;
+		var widBase = widBase - 0.005*2;
+
+		var h = hs+hs*0.5;
+
+		var domain2D = DOMAIN([[0,1],[0,1]])([20,1]);
+
+		var corner1 = BEZIER(S0)([[0.005*p,0.005*p,offset*p],
+							 [0,0,0.0025*p],[0,0,0.0025*p],
+							 [0.0075*p,0.0075*p,h/4*p],[0.0075*p,0.0075*p,h/4*p],
+							 [0.005*p,0.005*p,(h/2+offset)*p],[0.005*p,0.005*p,(h/2+offset)*p],
+							 [0.0025*p,0.0025*p,h/2*p], [0.0025*p,0.0025*p,h/2*p], [0.0025*p,0.0025*p,h/2*p], [0.0025*p,0.0025*p,h/2*p], [0.0025*p,0.0025*p,h/2*p],
+							 	[0.0025*p,0.0025*p,h/2*p], [0.0025*p,0.0025*p,h/2*p], [0.0025*p,0.0025*p,h/2*p], [0.0025*p,0.0025*p,h/2*p], [0.0025*p,0.0025*p,h/2*p],
+							 [0.0025*p,0.0025*p,(h-0.005)*p], [0.0025*p,0.0025*p,(h-0.005)*p], [0.0025*p,0.0025*p,(h-0.005)*p],
+							 	[0.0025*p,0.0025*p,(h-0.005)*p], [0.0025*p,0.0025*p,(h-0.005)*p], [0.0025*p,0.0025*p,(h-0.005)*p],
+							 [0,0,(h-0.0025)*p], [0,0,(h-0.0025)*p], [0,0,(h-0.0025)*p], [0,0,(h-0.0025)*p],
+							 [0,0,h*p],[0,0,h*p],
+							 [0.005*p,0.005*p,(h+offset)*p]]);
+
+		var corner2 = BEZIER(S0)([[0.005*p,(0.005+lenBase)*p,(height-offset)*p],
+							 [0,(lenBase+2*0.005)*p,(0.0025+height)*p],	[0,(lenBase+2*0.005)*p,(0.0025+height)*p],
+							 [0.0075*p,(lenBase-0.005+0.0075)*p,(height+h/4)*p], [0.0075*p,(lenBase-0.005+0.0075)*p,(height+h/4)*p],
+							 [0.005*p,(0.005+lenBase)*p,(height+h/2-offset)*p],	[0.005*p,(0.005+lenBase)*p,(height+h/2-offset)*p],
+							 [0.0025*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p], [0.0025*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],
+							 	[0.0025*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],	[0.0025*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],
+							 	[0.0025*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p], [0.0025*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],
+							 	[0.0025*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],	[0.0025*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],
+							 	[0.0025*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],	[0.0025*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],
+							 [0.0025*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p], [0.0025*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p],
+							 	[0.0025*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p], [0.0025*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p],
+							 	[0.0025*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p],	[0.0025*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p],
+							 [0,(lenBase+2*0.005)*p,(height+h-0.0025)*p], [0,(lenBase+2*0.005)*p,(height+h-0.0025)*p],
+							 	[0,(lenBase+2*0.005)*p,(height+h-0.0025)*p], [0,(lenBase+2*0.005)*p,(height+h-0.0025)*p],
+							 [0,(lenBase+2*0.005)*p,(height+h)*p], [0,(lenBase+2*0.005)*p,(height+h)*p],
+							 [0.005*p,(0.005+lenBase)*p,(height+h-offset)*p]]);
+
+
+		var corner3 = BEZIER(S0)([[(0.005+widBase)*p,0.005*p,offset*p],
+							 [(0.005*2+widBase)*p,0,0.0025*p],[(0.005*2+widBase)*p,0,0.0025*p],
+							 [(0.0075+widBase-0.005)*p,0.0075*p,h/4*p],[(0.0075+widBase-0.005)*p,0.0075*p,h/4*p],
+							 [(0.005+widBase)*p,0.005*p,(h/2+offset)*p],[(0.005+widBase)*p,0.005*p,(h/2+offset)*p],
+							 [(0.005+widBase+0.0025)*p,0.0025*p,h/2*p],[(0.005+widBase+0.0025)*p,0.0025*p,h/2*p],[(0.005+widBase+0.0025)*p,0.0025*p,h/2*p],
+							 	[(0.005+widBase+0.0025)*p,0.0025*p,h/2*p], [(0.005+widBase+0.0025)*p,0.0025*p,h/2*p], [(0.005+widBase+0.0025)*p,0.0025*p,h/2*p],
+							 	[(0.005+widBase+0.0025)*p,0.0025*p,h/2*p], [(0.005+widBase+0.0025)*p,0.0025*p,h/2*p], [(0.005+widBase+0.0025)*p,0.0025*p,h/2*p],
+							 	[(0.005+widBase+0.0025)*p,0.0025*p,h/2*p],
+							 [(0.005+widBase+0.0025)*p,0.0025*p,(h-0.005)*p], [(0.005+widBase+0.0025)*p,0.0025*p,(h-0.005)*p], [(0.005+widBase+0.0025)*p,0.0025*p,(h-0.005)*p],
+							 	[(0.005+widBase+0.0025)*p,0.0025*p,(h-0.005)*p], [(0.005+widBase+0.0025)*p,0.0025*p,(h-0.005)*p], [(0.005+widBase+0.0025)*p,0.0025*p,(h-0.005)*p],
+							 [(0.005*2+widBase)*p,0,(h-0.0025)*p],[(0.005*2+widBase)*p,0,(h-0.0025)*p],[(0.005*2+widBase)*p,0,(h-0.0025)*p],[(0.005*2+widBase)*p,0,(h-0.0025)*p],
+							 [(0.005*2+widBase)*p,0,h*p],[(0.005*2+widBase)*p,0,h*p],
+							 [(0.005+widBase)*p,0.005*p,(h+offset)*p]]);
+
+		var corner4 = BEZIER(S0)([[(0.005+widBase)*p,(0.005+lenBase)*p,(height-offset)*p],
+							 [(0.005*2+widBase)*p,(lenBase+2*0.005)*p,(0.0025+height)*p], [(0.005*2+widBase)*p,(lenBase+2*0.005)*p,(0.0025+height)*p],
+							 [(0.0075+widBase-0.005)*p,(lenBase-0.005+0.0075)*p,(height+h/4)*p], [(0.0075+widBase-0.005)*p,(lenBase-0.005+0.0075)*p,(height+h/4)*p],
+							 [(0.005+widBase)*p,(0.005+lenBase)*p,(height+h/2-offset)*p], [(0.005+widBase)*p,(0.005+lenBase)*p,(height+h/2-offset)*p],
+							 [(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p], [(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],
+							 	[(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p], [(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],
+							 	[(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p], [(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],
+							 	[(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p], [(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],
+							 	[(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p], [(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h/2)*p],
+							 [(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p], [(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p],
+							 	[(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p], [(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p],
+							 	[(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p], [(0.005+widBase+0.0025)*p,(0.005+lenBase+0.0025)*p,(height+h-0.005)*p],
+							 [(0.005*2+widBase)*p,(lenBase+2*0.005)*p,(height+h-0.0025)*p], [(0.005*2+widBase)*p,(lenBase+2*0.005)*p,(height+h-0.0025)*p],
+							 	[(0.005*2+widBase)*p,(lenBase+2*0.005)*p,(height+h-0.0025)*p], [(0.005*2+widBase)*p,(lenBase+2*0.005)*p,(height+h-0.0025)*p],
+							 [(0.005*2+widBase)*p,(lenBase+2*0.005)*p,(height+h)*p], [(0.005*2+widBase)*p,(lenBase+2*0.005)*p,(height+h)*p],
+							 [(0.005+widBase)*p,(0.005+lenBase)*p,(height+h-offset)*p]]);
+
+
+
+		return STRUCT([
+						MAP(BEZIER(S1)([corner1,corner2]))(domain2D),
+						MAP(BEZIER(S1)([corner3,corner1]))(domain2D),
+						MAP(BEZIER(S1)([corner3,corner4]))(domain2D),
+						MAP(BEZIER(S1)([corner2,corner4]))(domain2D),
+						TRIANGLE_DOMAIN(1,[[0.005*p,0.005*p,offset*p],[(0.005+widBase)*p,0.005*p,offset*p],[(0.005+widBase)*p,(0.005+lenBase)*p,(height-offset)*p]]),
+						TRIANGLE_DOMAIN(1,[[0.005*p,0.005*p,offset*p],[0.005*p,(0.005+lenBase)*p,(height-offset)*p],[(0.005+widBase)*p,(0.005+lenBase)*p,(height-offset)*p]]),
+						TRIANGLE_DOMAIN(1,[[0.005*p,0.005*p,(h+offset)*p],[(0.005+widBase)*p,0.005*p,(h+offset)*p],[(0.005+widBase)*p,(0.005+lenBase)*p,(height+h-offset)*p]]),
+						TRIANGLE_DOMAIN(1,[[0.005*p,0.005*p,(h+offset)*p],[0.005*p,(0.005+lenBase)*p,(height+h-offset)*p],[(0.005+widBase)*p,(0.005+lenBase)*p,(height+h-offset)*p]]),
+						]);
+
+	}
+
 	DRAW(SIMPLEX_GRID([[-2.66*p,0.04*p],[-0.24*p,0.48*p,-2.02*p,0.48*p],[hs*2*p]]));
 	DRAW(SIMPLEX_GRID([[-3.34*p,0.29*p],[-1.05*p,0.04*p,-1.28*p,0.04*p],[hs*2*p]]));
 
-	// Rail left divided in parts, from the bottom till the top one
+	// Rail left divided in parts, from the bottom till the top one (look at the plant)
 	var railLeft1 = getRailBase(p,hs,0.29,h1,0.0015);
+	var railLeftTop1 = getRailTop(p,hs,0.29,0.04,h1,0.0025);
 	railLeft1 = T([0,1])([3.63*p,1.05*p])(R([0,1])(PI/2)(railLeft1));
+	railLeftTop1 = T([0,1,2])([3.62*p,1.05*p,(8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop1));
 
 	var railLeft2 = getRailBase(p,hs,0.27,0,0);
+	var railLeftTop2 = getRailTop(p,hs,0.27,0.04,0,0);
 	railLeft2 = T([0,1,2])([3.34*p,1.05*p,h1*p])(R([0,1])(PI/2)(railLeft2));
+	railLeftTop2 = T([0,1,2])([3.34*p,1.05*p,(h1+8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop2));
 
 	var railLeft3 = getRailBase(p,hs,0.15,h2,0.0015);
 	railLeft3 = T([0,1,2])([3.07*p,1.05*p,h1*p])(R([0,1])(PI/2)(railLeft3));
@@ -233,11 +325,36 @@ function mainStructure(){
 
 	//finire rails left
 
-	var modelRailsLeft = STRUCT([railLeft1,railLeft2,railLeft3,railLeft4,railLeft5,railLeft6,railLeft7,railLeft8,railLeft9]);
+	var modelRailsLeft = STRUCT([railLeft1,railLeftTop1,railLeft2,railLeftTop2,
+								 railLeft3,railLeft4,railLeft5,railLeft6,railLeft7,railLeft8,railLeft9]);
 
 	var modelRailsRight = T([1])([3.46*p])(S([1])([-1])(modelRailsLeft));
 
     modelList = STRUCT([modelList,modelRailsLeft,modelRailsRight]);
+
+
+    // Pillars
+
+    // A single pillar
+    var pillar = SIMPLEX_GRID([[0.04*p],[0.04*p],[((8*hs+0.005)+0.04)*p]]);
+	pillar = T([0,1])([3.59*p,1.05*p])(pillar);
+	var pillarBaseFrieze = getRailBase(p,hs,0.04,0,0);
+	pillarBaseFrieze = S([0,1])([1.25,1.25])(pillarBaseFrieze);
+	pillarBaseFrieze = T([0,1,2])([3.585*p,1.045*p,hs*p])(pillarBaseFrieze);
+	var pillarBase = SIMPLEX_GRID([[0.05*p],[0.05*p],[hs*p]]);
+	pillarBase = T([0,1])([3.585*p,1.045*p])(pillarBase);
+	var pillarTop = getRailTop(p,hs,0.05,0.05,0,0);
+	pillarTop = T([0,1,2])([3.585*p,1.045*p,((9*hs+0.005))*p])(pillarTop);
+	var pillarStruct = STRUCT([pillar,pillarTop,pillarBase,pillarBaseFrieze]);
+
+	var setPillarsLeft = STRUCT([pillarStruct])
+
+	var setPillarsRight = STRUCT([]);
+
+	// adding a single pillar
+	modelList = STRUCT([modelList,setPillarsLeft,setPillarsRight]);
+
+    // WALLS
 
     // Walls under the strairs
 
