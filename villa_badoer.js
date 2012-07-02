@@ -360,6 +360,7 @@ function mainStructure(){
     var pillar = SIMPLEX_GRID([[0.04*p],[0.04*p],[((8*hs+0.005)+0.04)*p]]);
 	pillar = T([0,1])([3.59*p,1.05*p])(pillar);
 	var pillarBaseFrieze = getRailBase(p,hs,0.04,0,0);
+	var pillarEnv = T([0,1])([3.595*p,1.055*p])(SIMPLEX_GRID([[0.03*p],[0.03*p],[((8*hs+0.005)+0.04)*p]]));
 	pillarBaseFrieze = S([0,1])([1.25,1.25])(pillarBaseFrieze);
 	pillarBaseFrieze = T([0,1,2])([3.585*p,1.045*p,hs*p])(pillarBaseFrieze);
 	var pillarBase = SIMPLEX_GRID([[0.05*p],[0.05*p],[hs*p]]);
@@ -369,26 +370,142 @@ function mainStructure(){
 	var pillarStructStair = STRUCT([pillar,pillarTop,pillarBaseFrieze]);
 	var pillarStruct = STRUCT([pillarStructStair,pillarBase]);
 
+
+
 	// all pillars in a struct
 	var modelPillarsLeft = STRUCT([pillarStruct,
-								 T([0,2])([-0.29*p,(h1-hs)*p])(pillarStructStair),
-								 T([0,2])([-0.52*p,(h1-hs)*p])(pillarStructStair),
-								 T([0,2])([-0.71*p,(h1+h2-hs)*p])(pillarStructStair),
-								 T([0,1,2])([-0.71*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair),
-								 T([0,1,2])([-0.93*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair),
-								 T([0,1,2])([-0.93*p,-0.35*p,(h1+h2-hs)*p])(pillarStructStair),
-								 T([0,1,2])([-0.93*p,-0.81*p,0])(pillarStruct),
-								 T([0,2])([-1.39*p,(h1+h2+9*hs)*p])(pillarStruct),
-								 T([0,2])([-1.11*p,(h1+h2)*p])(pillarStruct),
-								 T([0,1,2])([-1.25*p,-0.37*p,(h1+h2-hs)*p])(pillarStruct),
-								 T([0,1,2])([-1.25*p,-0.87*p,(h1+h2-hs)*p])(pillarStructStair),
-								 ]);
+				 T([0,2])([-0.30*p,(h1-hs)*p])(pillarStructStair),
+				 	T([0,2])([-0.29*p,(h1-hs)*p])(pillarEnv),
+				 	T([0,2])([-0.31*p,(h1-hs)*p])(pillarEnv),
+				 T([0,2])([-0.52*p,(h1-hs)*p])(pillarStructStair),
+				 	T([0,2])([-0.51*p,(h1-hs)*p])(pillarEnv),
+				 	T([0,2])([-0.53*p,(h1-hs)*p])(pillarEnv),
+				 T([0,2])([-0.71*p,(h1+h2-hs)*p])(pillarStructStair),
+				 T([0,1,2])([-0.71*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair),
+				 T([0,1,2])([-0.93*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair),
+				 T([0,1,2])([-0.93*p,-0.35*p,(h1+h2-hs)*p])(pillarStructStair),
+				 T([0,1,2])([-0.93*p,-0.81*p,0])(pillarStruct),
+				 T([0,2])([-1.39*p,(h1+h2+9*hs)*p])(pillarStruct),
+				 T([0,2])([-1.11*p,(h1+h2)*p])(pillarStruct),
+				 T([0,1,2])([-1.25*p,-0.37*p,(h1+h2-hs)*p])(pillarStruct),
+				 T([0,1,2])([-1.25*p,-0.87*p,(h1+h2-hs)*p])(pillarStructStair),
+				 ]);
 
 
 	var modelPillarsRight = T([1])([3.46*p])(S([1])([-1])(modelPillarsLeft));
 
 	// adding a single pillar
 	modelList = STRUCT([modelList,modelPillarsLeft,modelPillarsRight]);
+
+
+	// Mullions
+
+	function getMullion(p, hs){
+
+		var h = 7.05*hs;
+
+		var hz = 0.035;
+
+		var domain = DOMAIN([[0,1],[0,2*PI]])([10,10]);
+
+		var cube = CUBOID([0.0325*p,0.0325*p,(hz)*p]);
+
+		var profile = BEZIER(S0)([
+			[0.016*p,0,(hz)*p],
+			[0.016*p,0,(hz+0.008)*p],
+			[0,0,(hz)*p],
+			[0,0,(hz+0.008)*p],
+				[0,0,(hz+0.008)*p],
+				[0,0,(hz+0.008)*p],
+			[0.0363*p,0,(hz+h/2-0.025)*p],
+				[0.0361*p,0,(hz+h/2-0.018)*p],
+			[0,0,(hz+h/2-0.035)*p],
+			[0.005*p,0,(hz+h-h/7.3)*p],
+			[0,0,(hz+h-h/7.3)*p],
+				[0,0,(hz+h-h/7.3)*p],
+			[0.0112*p,0,(hz+h-h/5.4)*p],
+				[0.0112*p,0,(hz+h-h/5.4)*p],
+				[0.0112*p,0,(hz+h-h/5.4)*p],
+			[0.0112*p,0,(hz+h)*p]
+			]);
+
+
+	 	var profile = ROTATIONAL_SURFACE(profile);
+		var surface = MAP(profile)(domain);
+		
+
+		return STRUCT([T([0,1])([0.016*p,0.016*p])(surface),cube]);
+
+	}
+
+	var mullion = getMullion(p,hs);
+
+	var simplePillar = SIMPLEX_GRID([[0.03*p],[0.03*p],[((9*hs+0.005))*p]]);
+
+	var modelMullionsLeft= STRUCT([
+		T([0,1,2])([3.545*p,1.055*p,(hs+1.4*hs/2)*p])(mullion),
+		T([0,1,2])([3.505*p,1.055*p,(hs+4*hs/2)*p])(mullion),
+		T([0,1,2])([3.465*p,1.055*p,(hs+6.6*hs/2)*p])(mullion),
+		T([0,1,2])([3.425*p,1.055*p,(hs+9.2*hs/2)*p])(mullion),
+		T([0,1,2])([3.385*p,1.055*p,(hs+12*hs/2)*p])(mullion),
+		T([0,1,2])([3.345*p,1.055*p,(hs+14.4*hs/2)*p])(mullion),
+		//h1 : middle
+		T([0,1,2])([3.245*p,1.055*p,(h1+hs/2.8)*p])(mullion),
+		T([0,1,2])([3.203*p,1.055*p,(h1+hs/2.8)*p])(mullion),
+		T([0,1,2])([3.1625*p,1.055*p,(h1+hs/2.8)*p])(mullion),
+		T([0,1,2])([3.12*p,1.055*p,(h1+hs/2.8)*p])(mullion),
+		//h2
+		T([0,1,2])([3.025*p,1.055*p,(h1+hs)*p])(mullion),
+		T([0,1,2])([2.98*p,1.055*p,(h1+5*hs/2)*p])(mullion),
+		T([0,1,2])([2.935*p,1.055*p,(h1+8*hs/2)*p])(mullion),
+		// h1+h2
+		T([0,1,2])([2.8825*p,1.0025*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.8825*p,0.9575*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.8825*p,0.913*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.84*p,0.8635*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.7975*p,0.8635*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.7525*p,0.8635*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.71*p,0.8635*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.663*p,0.82*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.663*p,0.7825*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.663*p,0.745*p,(h1+h2+hs/2.8)*p])(mullion),
+		// lateral
+		T([0,1,2])([2.663*p,0.65*p,(12.5*hs)*p])(mullion),
+		T([0,1,2])([2.663*p,0.605*p,(11.3*hs)*p])(mullion),
+		T([0,1,2])([2.663*p,0.56*p,(10*hs)*p])(simplePillar),
+		T([0,1,2])([2.663*p,0.515*p,(8.6*hs)*p])(mullion),
+		T([0,1,2])([2.663*p,0.470*p,(7.1*hs)*p])(mullion),
+		T([0,1,2])([2.663*p,0.425*p,(6*hs)*p])(mullion),
+		T([0,1,2])([2.663*p,0.380*p,(4.5*hs)*p])(simplePillar),
+		T([0,1,2])([2.663*p,0.335*p,(3*hs)*p])(mullion),
+		T([0,1,2])([2.663*p,0.290*p,(1.5*hs)*p])(mullion),
+		//h1+h2 lateral
+		T([0,1,2])([2.3425*p,0.6375*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.3425*p,0.5925*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.3425*p,0.5475*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.3425*p,0.5025*p,(h1+h2+hs/2.8)*p])(simplePillar),
+		T([0,1,2])([2.3425*p,0.4575*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.3425*p,0.4125*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.3425*p,0.3675*p,(h1+h2+hs/2.8)*p])(simplePillar),
+		T([0,1,2])([2.3425*p,0.3225*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.3425*p,0.2775*p,(h1+h2+hs/2.8)*p])(mullion),
+		T([0,1,2])([2.3425*p,0.2325*p,(h1+h2+hs/2.8)*p])(mullion),
+		//lodge stairs
+		T([0,1,2])([2.4445*p,1.055*p,(h1+h2+4*hs/2)*p])(mullion),
+		T([0,1,2])([2.4045*p,1.055*p,(h1+h2+6.5*hs/2)*p])(mullion),
+		T([0,1,2])([2.3645*p,1.055*p,(h1+h2+10*hs/2)*p])(mullion),
+		T([0,1,2])([2.3245*p,1.055*p,(h1+h2+12.5*hs/2)*p])(mullion),
+		T([0,1,2])([2.2845*p,1.055*p,(h1+h2+15.4*hs/2)*p])(mullion),
+		T([0,1,2])([2.2445*p,1.055*p,(h1+h2+18*hs/2)*p])(mullion),
+		]);
+
+
+	var modelMullionsRight = T([1])([3.46*p])(S([1])([-1])(modelMullionsLeft));
+
+	modelList = STRUCT([modelList,modelMullionsLeft,modelMullionsRight]);
+
+
+//	DRAW(getLittleColumn(p,hs,0));
 
     // WALLS
 
@@ -435,3 +552,16 @@ drawVilla();
 // TO DELETE:
 
 //	DRAW(COLOR([0,0,1])(STRUCT([POLYLINE([[3.63*p,0,0],[3.63*p,3.46*p,0]])])));//,POLYPOINT([[3.6*p,1.09*p,0],[3.64*p,1.09*p,0]])])));
+
+//	//STRUCT([
+//					T([0,1,2])([3.59*p,1.05*p,hs*p])(pillarBaseFrieze),
+	//				T([0,1])([3.595*p,1.055*p])(SIMPLEX_GRID([[0.03*p],[0.03*p],[((8*hs+0.005)+0.04)*p]])),
+	//				T([0,1,2])([3.59*p,1.05*p,((9*hs+0.005))*p])(getRailTop(p,hs,0.04,0.04,0,0))]);
+//
+//			[0.0366*p,0,(hz+h/2-0.022+offset)*p],
+//
+//				[0.0366*p,0,(hz+h/2-0.02+offset)*p],
+//
+//			[0,0,(hz+h/2-0.037+offset)*p],
+//
+//				[0,0,(hz+h/2-0.035+offset)*p],
