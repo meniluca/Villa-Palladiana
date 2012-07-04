@@ -16,43 +16,57 @@
     Drawer object responsable to draw villa's parts.
 */
 function Drawer(){
-    this.mainStructure = undefined;
-    this.porches = undefined;
+	this.foundation = undefined;
+	this.steps = undefined;
+	this.baseComponents = undefined;
 }
 
-Drawer.prototype.addMainStructure = function(mainStructure){
-    this.mainStructure = mainStructure;
+
+Drawer.prototype.addFoundation = function(foundation){
+    this.foundation = foundation;
 }
 
-Drawer.prototype.drawMainStructure = function(){
-    if (this.mainStructure === undefined){
-            alert("Create the model \"mainStructure\" before draw it!");
+Drawer.prototype.drawFoundation = function(){
+    if (this.foundation === undefined){
+            alert("Create the model \"foundation\" before draw it!");
             return;
     }
-    return DRAW(this.mainStructure);
+    return DRAW(this.foundation);
 }
 
-
-Drawer.prototype.addPorches = function(porches){
-    this.porches = porches;
+Drawer.prototype.addSteps = function(steps){
+    this.steps = steps;
 }
 
-Drawer.prototype.drawPorches = function(){
-    if (this.porches === undefined){
-            alert("Create the model \"porches\" before draw it!");
+Drawer.prototype.drawSteps = function(){
+    if (this.steps === undefined){
+            alert("Create the model \"steps\" before draw it!");
             return;
     }
-    return DRAW(this.porches);
+    return DRAW(this.steps);
 }
 
+Drawer.prototype.addBaseComponents = function(baseComponents){
+    this.baseComponents = baseComponents;
+}
+
+Drawer.prototype.drawBaseComponents = function(){
+    if (this.baseComponents === undefined){
+            alert("Create the model \"baseComponents\" before draw it!");
+            return;
+    }
+    return DRAW(this.baseComponents);
+}
 
 Drawer.prototype.drawAll = function(){
-    return DRAW(STRUCT([this.mainStructure,this.porches]));
+    return DRAW(STRUCT([this.mainStructure,this.foundation]));
 }
+
 
 /*
     Object stateless used to set proportion
 */
+
 function Scale(){};
 
 var scale = new Scale();
@@ -61,106 +75,145 @@ scale.proportion = 10;
 
 
 /*
-    The main structure
+	Object stateless used to collect all colors
 */
 
-function mainStructure(){
+function Colors(){};
 
-    // An empty struct that will be filled and returned
-    var modelList = STRUCT([]);
+var colors = new Colors();
 
-    // Get proportion
-    var p = scale.proportion || 1;
+colors.foundation = [200/255,230/255,240/255,1];
+colors.hue = [1/255,230/255,240/255,1];
 
-    //
-    // FOUNDATION
-    //
 
-    // height foundation steps
-    var h1 = 0.16;
-    var h2 = 0.08885;
+/*
+	Object stateless used to collect all domains
+*/
 
-	var foundation = [
-					SIMPLEX_GRID([[2.38*p],[3.46*p],[h1*p]]), // A
-					SIMPLEX_GRID([[-0.18*p,2.2*p],[-0.18*p,3.1*p],[-h1*p,h2*p]]), // B
-					SIMPLEX_GRID([[-2.38*p,0.32*p],[-0.72*p,2.02*p],[(h1+h2)*p]]), // C
-					SIMPLEX_GRID([[-2.7*p,0.22*p],[-0.86*p,1.74*p],[(h1+h2)*p]]), // D
-					SIMPLEX_GRID([[-3.07*p,0.27*p],[-1.05*p,1.36*p],[h1*p]])
- 			];
+function Domains(){};
 
-    modelList = STRUCT(foundation);
+var domains = new Domains();
 
-    // STAIRS
+domains.stepDomain = DOMAIN([[0,1],[0,1]])([10,1]);
+domains.railTopDomain = DOMAIN([[0,1],[0,1]])([20,1]);
+domains.railBaseDomain = DOMAIN([[0,1],[0,1]])([10,1]);
+domains.mullionDomain = DOMAIN([[0,1],[0,2*PI]])([20,10]);
 
-    // 'hs' (height-step) is the height of a single step
+/*
+    Function that generates villa's foundation
+*/
+
+function foundation(){
+
+	// Get proportion
+	var p = scale.proportion || 1;
+
+	// define height foundation
+	var h1 = 0.16;
+	var h2 = 0.08885;
+
+	return STRUCT([
+			COLOR(colors.foundation)(SIMPLEX_GRID([[2.24*p],[3.46*p],[h1*p]])), // A
+			COLOR(colors.foundation)(SIMPLEX_GRID([[-0.18*p,1.92*p],[-0.18*p,3.1*p],[-h1*p,h2*p]])), // B
+			COLOR(colors.hue)(SIMPLEX_GRID([[-2.24*p,0.14*p],[3.46*p],[h1*p]])), // A'
+			COLOR(colors.hue)(SIMPLEX_GRID([[-2.1*p,0.28*p],[-0.18*p,3.1*p],[-h1*p,h2*p]])), // B'
+			COLOR(colors.hue)(SIMPLEX_GRID([[-2.38*p,0.32*p],[-0.72*p,2.02*p],[(h1+h2)*p]])), // C
+			//COLOR(colors.hue)(SIMPLEX_GRID([[-2.38*p,0.32*p],[-0.86*p,1.74*p],[(h1+h2)*p]])), // C da sostituire con la porta :)
+			COLOR(colors.hue)(SIMPLEX_GRID([[-2.7*p,0.22*p],[-0.86*p,1.74*p],[(h1+h2)*p]])), // D
+			COLOR(colors.hue)(SIMPLEX_GRID([[-3.07*p,0.27*p],[-1.05*p,1.36*p],[h1*p]]))
+ 		]);
+
+}
+
+
+/*
+	Function that generate all the steps in the villa
+*/
+
+function steps(){
+
+	// Get proportion
+	var p = scale.proportion || 1;
+
+	// define useful measure
+	// 'hs' (height-step) is the height of a single step
     var hs = 0.01777;
+	var h1 = 0.16;
+	var h2 = 0.08885;
 
-    var controlsStep = [
-                    [0*p,0*p,hs*p],
-                    [0.04*p,0*p,hs*p],[0.04*p,0*p,hs*p],[0.04*p,0*p,hs*p],
-                    [0.04*p,0*p,(hs-0.005)*p],[0.04*p,0*p,(hs-0.005)*p],
-                    [0.035*p,0*p,(hs-0.005)*p],[0.035*p,0*p,(hs-0.005)*p],[0.035*p,0*p,(hs-0.005)*p],[0.035*p,0*p,(hs-0.005)*p],
-                    [0.035*p,0*p,0*p]
-            ];
+	// Control point of the profile of a single step
+	var controlsStep = [
+			[0*p,0*p,hs*p],
+			[0.04*p,0*p,hs*p],[0.04*p,0*p,hs*p],[0.04*p,0*p,hs*p],
+			[0.04*p,0*p,(hs-0.005)*p],[0.04*p,0*p,(hs-0.005)*p],
+			[0.035*p,0*p,(hs-0.005)*p],[0.035*p,0*p,(hs-0.005)*p],[0.035*p,0*p,(hs-0.005)*p],[0.035*p,0*p,(hs-0.005)*p],
+			[0.035*p,0*p,0*p]];
 
     // a single step profile
     var stepProfile = BEZIER(S0)(controlsStep);
 
-    var domain2D = DOMAIN([[0,1],[0,1]])([10,1]);
-
     // Defines steps with different width
-    var step = MAP(CYLINDRICAL_SURFACE(stepProfile)([0,1.28*p,0]))(domain2D);
-    var stepLittle = MAP(CYLINDRICAL_SURFACE(stepProfile)([0,0.28*p,0]))(domain2D);
+    var frontStep = MAP(CYLINDRICAL_SURFACE(stepProfile)([0,1.28*p,0]))(domains.stepDomain);
+    var lateralStep = MAP(CYLINDRICAL_SURFACE(stepProfile)([0,0.28*p,0]))(domains.stepDomain);
 
-    // Translate and repeat steps
-    step = T([0,1])([3.59*p,1.09*p])(step);
+    // Translate and repeat steps whit function t, t2, t3
+    frontStep = T([0,1])([3.59*p,1.09*p])(frontStep);
     var t = T([0,2])([-0.035*p,hs*p]);
     var t2 = T([0,2])([-0.275*p,hs*p]);
     var t3 = T([0,2])([-0.41*p,hs*p]);
-    // To not istance many variables, 'step' now will contains many steps
-    step = STRUCT([step, t, step, t, step, t, step, t, step, t, step, t, step, t, step, t, step,
-                   t2, step, t, step, t, step, t, step, t, step,
-                   t3, step, t, step, t, step, t, step, t, step, t, step, t, step, t, step, t, step, t, step]); // TODO aggiungere gli altri scalini
-
-    // add steps to the final model
-    modelList = STRUCT([modelList,step]);
+    // To not istance many variables, 'frontStep' now will contains many steps
+    frontStep = STRUCT([
+    			frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep,
+                t2, frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep,
+                t3, frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep, t, frontStep]);
 
     // generate lateral right stairs
-    stepLittle = R([0,1])(PI/2)(stepLittle);
-    stepLittle = T([0,1])([(2.38+0.28)*p,3.17*p])(stepLittle);
+    lateralStep = R([0,1])(PI/2)(lateralStep);
+    lateralStep = T([0,1])([(2.38+0.28)*p,3.17*p])(lateralStep);
 
     t = T([1,2])([-0.035*p,hs*p]);
-    // same as 'step' variable now 'stepLittle' contains all steps
-    stepLittle = STRUCT([stepLittle, t, stepLittle, t, stepLittle, t, stepLittle, t, stepLittle, t,
-                         stepLittle, t, stepLittle, t, stepLittle, t, stepLittle, t, stepLittle, t,
-                         stepLittle, t, stepLittle, t, stepLittle, t, stepLittle]);
+    // same as 'frontStep' variable now 'lateralStep' contains all steps
+    lateralStep = STRUCT([
+    				lateralStep, t, lateralStep, t, lateralStep, t, lateralStep, t, lateralStep, t,
+                    lateralStep, t, lateralStep, t, lateralStep, t, lateralStep, t, lateralStep, t,
+                    lateralStep, t, lateralStep, t, lateralStep, t, lateralStep]);
     
     // lateral left staris
-    var stepLittleRigth = T([0,1])([-(2.38*2+0.28)*p,-(2.74+0.265+0.455)*p])(stepLittle);
-    stepLittleRigth = R([0,1])(PI)(stepLittleRigth);
-    //stepLittleRigth = T([0,1])([(2.38*2+0.04+0.28)*p,(2.02+0.18+0.54+0.54+0.18)*p])(stepLittleRigth);
+    var lateralStepRight = T([0,1])([-(2.38*2+0.28)*p,-(2.74+0.265+0.455)*p])(lateralStep);
+    lateralStepRight = R([0,1])(PI)(lateralStepRight);
     
-    modelList = STRUCT([modelList,stepLittle,stepLittleRigth]);
+    return COLOR(colors.hue)(STRUCT([frontStep,lateralStep,lateralStepRight]));
 
-    // Lodge floor
+}
 
-    var lodgefloor = SIMPLEX_GRID([[-1.7*p, 0.495*p],[-1.05*p,1.36*p]]);
-    lodgefloor = lodgefloor.translate([2],[(h1+h2+10*hs)*p]);
+/*
+	Function that generates all other pieces componing foundations
+*/
 
-    // BUG: cannot add it in the struct
-    DRAW(lodgefloor); //    modelList = STRUCT([modelList,lodgefloor]);
+function baseComponents(){
 
-    //
- 	// RAILS
- 	//
+	// An empty struct that will be filled and returned
+	var modelList = STRUCT([]);
+
+	// Get proportion
+	var p = scale.proportion || 1;
+
+	// height foundation steps
+    var h1 = 0.16;
+    var h2 = 0.08885;
+    var hs = 0.01777;
+
+    /*
+		Function that generate the BASE of a rail with length 'lenBase' skewed so as to reach height 'h'.
+		Parametes 'p' and 'hs' are needed to maintain proportion with other models
+		Besides 'offset' is a little measure used to correct approssimation error derived from inclination
+    */
 
 	function getRailBase(p,hs,lenBase,h,offset){
 
 		var lenBase = lenBase - 0.005;
 		var hs = hs;
 		var h = h;
-
-		domain2D = DOMAIN([[0,1],[0,1]])([10,1]);
 
 		// hs**p
 
@@ -179,10 +232,10 @@ function mainStructure(){
 
 
 		return STRUCT([
-				MAP(BEZIER(S1)([corner1,corner2]))(domain2D),
-				MAP(BEZIER(S1)([corner3,corner1]))(domain2D),
-				MAP(BEZIER(S1)([corner3,corner4]))(domain2D),
-				MAP(BEZIER(S1)([corner2,corner4]))(domain2D),
+				MAP(BEZIER(S1)([corner1,corner2]))(domains.railBaseDomain),
+				MAP(BEZIER(S1)([corner3,corner1]))(domains.railBaseDomain),
+				MAP(BEZIER(S1)([corner3,corner4]))(domains.railBaseDomain),
+				MAP(BEZIER(S1)([corner2,corner4]))(domains.railBaseDomain),
 
 				TRIANGLE_DOMAIN(1,[[0,0,(hs)*p],[0.04*p,0,(hs)*p],[0.04*p,(lenBase+0.005)*p,(hs+h)*p]]), //copertura sotto
 				TRIANGLE_DOMAIN(1,[[0,0,(hs)*p],[0,(lenBase+0.005)*p,(hs+h)*p],[0.04*p,(lenBase+0.005)*p,(hs+h)*p]]),
@@ -203,14 +256,20 @@ function mainStructure(){
 
     }
 
+
+    /*
+		Function that generate the TOP of a rail with length 'lenBase' and width 'widBase',
+		skewed so as to reach height 'height'.
+		Parametes 'p' and 'hs' are needed to maintain proportion with other models
+		Besides 'offset' is a little measure used to correct approssimation error derived from inclination
+    */
+
     function getRailTop(p, hs, lenBase, widBase, height, offset){
 
 		var lenBase = lenBase - 0.005*2;
 		var widBase = widBase - 0.005*2;
 
 		var h = hs+hs*0.5;
-
-		var domain2D = DOMAIN([[0,1],[0,1]])([20,1]);
 
 		var corner1 = BEZIER(S0)([[0.005*p,0.005*p,offset*p],
 							 [0,0,0.0025*p],[0,0,0.0025*p],
@@ -276,10 +335,10 @@ function mainStructure(){
 
 
 		return STRUCT([
-						MAP(BEZIER(S1)([corner1,corner2]))(domain2D),
-						MAP(BEZIER(S1)([corner3,corner1]))(domain2D),
-						MAP(BEZIER(S1)([corner3,corner4]))(domain2D),
-						MAP(BEZIER(S1)([corner2,corner4]))(domain2D),
+						MAP(BEZIER(S1)([corner1,corner2]))(domains.railTopDomain),
+						MAP(BEZIER(S1)([corner3,corner1]))(domains.railTopDomain),
+						MAP(BEZIER(S1)([corner3,corner4]))(domains.railTopDomain),
+						MAP(BEZIER(S1)([corner2,corner4]))(domains.railTopDomain),
 						TRIANGLE_DOMAIN(1,[[0.005*p,0.005*p,offset*p],[(0.005+widBase)*p,0.005*p,offset*p],[(0.005+widBase)*p,(0.005+lenBase)*p,(height-offset)*p]]),
 						TRIANGLE_DOMAIN(1,[[0.005*p,0.005*p,offset*p],[0.005*p,(0.005+lenBase)*p,(height-offset)*p],[(0.005+widBase)*p,(0.005+lenBase)*p,(height-offset)*p]]),
 						TRIANGLE_DOMAIN(1,[[0.005*p,0.005*p,(h+offset)*p],[(0.005+widBase)*p,0.005*p,(h+offset)*p],[(0.005+widBase)*p,(0.005+lenBase)*p,(height+h-offset)*p]]),
@@ -288,8 +347,36 @@ function mainStructure(){
 
 	}
 
-	DRAW(SIMPLEX_GRID([[-2.66*p,0.04*p],[-0.24*p,0.48*p,-2.02*p,0.48*p],[hs*2*p]]));
-	DRAW(SIMPLEX_GRID([[-3.34*p,0.29*p],[-1.05*p,0.04*p,-1.28*p,0.04*p],[hs*2*p]]));
+
+	/*
+		Function that generate a single mullion with setted height
+		calcolated since hs
+	*/
+
+	function getMullion(p, hs){
+
+		var h = 7.05*hs;
+
+		var hz = 0.035;
+
+		var cube = CUBOID([0.0325*p,0.0325*p,(hz)*p]);
+
+		var profile = BEZIER(S0)([ [0.016*p,0,(hz)*p], [0.016*p,0,(hz+0.008)*p], [0,0,(hz)*p],
+			[0,0,(hz+0.008)*p],	[0,0,(hz+0.008)*p],	[0,0,(hz+0.008)*p], [0.0363*p,0,(hz+h/2-0.025)*p], [0.0361*p,0,(hz+h/2-0.018)*p],
+			[0,0,(hz+h/2-0.035)*p],	[0.005*p,0,(hz+h-h/7.3)*p],	[0,0,(hz+h-h/7.3)*p], [0,0,(hz+h-h/7.3)*p],
+			[0.0112*p,0,(hz+h-h/5.4)*p], [0.0112*p,0,(hz+h-h/5.4)*p], [0.0112*p,0,(hz+h-h/5.4)*p], [0.0112*p,0,(hz+h)*p]
+			]);
+
+	 	var profile = ROTATIONAL_SURFACE(profile);
+		var surface = MAP(profile)(domains.mullionDomain);
+
+		return STRUCT([T([0,1])([0.016*p,0.016*p])(surface),cube]);
+
+	}
+
+	//
+	// RAILS
+	//
 
 	// Rail left divided in parts, from the bottom till the top one (look at the plant)
 	var railLeft1 = getRailBase(p,hs,0.29,h1,0.0015);
@@ -337,24 +424,20 @@ function mainStructure(){
 	railLeft9 = T([0,1,2])([2.34*p,0.18*p,(h1+h2)*p])(railLeft9);
 	railLeftTop9 = T([0,1,2])([2.34*p,0.18*p,(h1+h2+8*hs+0.005)*p])(railLeftTop9);
 
-	//finire rails left
 
-	var modelRailsLeft = STRUCT([railLeft1,railLeftTop1,
-								 railLeft2,railLeftTop2,
-								 railLeft3,railLeftTop3,
-								 railLeft4,railLeftTop4,
-								 railLeft5,railLeftTop5,
-								 railLeft6,railLeftTop6,
-								 railLeft7,railLeftTop7,
-								 railLeft8,railLeftTop8,
-								 railLeft9,railLeftTop9]);
+	// Generate rail's struct to generate right side
+	var modelRailsLeft = STRUCT([
+				railLeft1,railLeftTop1, railLeft2,railLeftTop2, railLeft3,railLeftTop3, railLeft4,railLeftTop4, railLeft5,railLeftTop5, 
+				railLeft6,railLeftTop6, railLeft7,railLeftTop7, railLeft8,railLeftTop8, railLeft9,railLeftTop9]);
 
 	var modelRailsRight = T([1])([3.46*p])(S([1])([-1])(modelRailsLeft));
 
-    modelList = STRUCT([modelList,modelRailsLeft,modelRailsRight]);
+    modelList = STRUCT([modelRailsLeft,modelRailsRight]);
 
 
-    // Pillars
+    //
+    // PILLARS
+    //
 
     // A single pillar
     var pillar = SIMPLEX_GRID([[0.04*p],[0.04*p],[((8*hs+0.005)+0.04)*p]]);
@@ -370,78 +453,29 @@ function mainStructure(){
 	var pillarStructStair = STRUCT([pillar,pillarTop,pillarBaseFrieze]);
 	var pillarStruct = STRUCT([pillarStructStair,pillarBase]);
 
-
-
 	// all pillars in a struct
 	var modelPillarsLeft = STRUCT([pillarStruct,
-				 T([0,2])([-0.30*p,(h1-hs)*p])(pillarStructStair),
-				 	T([0,2])([-0.29*p,(h1-hs)*p])(pillarEnv),
-				 	T([0,2])([-0.31*p,(h1-hs)*p])(pillarEnv),
-				 T([0,2])([-0.52*p,(h1-hs)*p])(pillarStructStair),
-				 	T([0,2])([-0.51*p,(h1-hs)*p])(pillarEnv),
-				 	T([0,2])([-0.53*p,(h1-hs)*p])(pillarEnv),
-				 T([0,2])([-0.71*p,(h1+h2-hs)*p])(pillarStructStair),
-				 T([0,1,2])([-0.71*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair),
-				 T([0,1,2])([-0.93*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair),
-				 T([0,1,2])([-0.93*p,-0.35*p,(h1+h2-hs)*p])(pillarStructStair),
-				 T([0,1,2])([-0.93*p,-0.81*p,0])(pillarStruct),
-				 T([0,2])([-1.39*p,(h1+h2+9*hs)*p])(pillarStruct),
-				 T([0,2])([-1.11*p,(h1+h2)*p])(pillarStruct),
-				 T([0,1,2])([-1.25*p,-0.37*p,(h1+h2-hs)*p])(pillarStruct),
-				 T([0,1,2])([-1.25*p,-0.87*p,(h1+h2-hs)*p])(pillarStructStair),
-				 ]);
-
+				 T([0,2])([-0.30*p,(h1-hs)*p])(pillarStructStair), T([0,2])([-0.29*p,(h1-hs)*p])(pillarEnv), T([0,2])([-0.31*p,(h1-hs)*p])(pillarEnv),
+				 T([0,2])([-0.52*p,(h1-hs)*p])(pillarStructStair), T([0,2])([-0.51*p,(h1-hs)*p])(pillarEnv), T([0,2])([-0.53*p,(h1-hs)*p])(pillarEnv),
+				 T([0,2])([-0.71*p,(h1+h2-hs)*p])(pillarStructStair), T([0,1,2])([-0.71*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair), 
+				 T([0,1,2])([-0.93*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair), T([0,1,2])([-0.93*p,-0.35*p,(h1+h2-hs)*p])(pillarStructStair),
+				 T([0,1,2])([-0.93*p,-0.81*p,0])(pillarStruct), T([0,2])([-1.39 *p,(h1+h2+9*hs)*p])(pillarStruct), T([0,2])([-1.11*p,(h1+h2)*p])(pillarStruct),
+				 T([0,1,2])([-1.25*p,-0.37*p,(h1+h2-hs)*p])(pillarStruct), T([0,1,2])([-1.25*p,-0.87*p,(h1+h2-hs)*p])(pillarStructStair) ]);
 
 	var modelPillarsRight = T([1])([3.46*p])(S([1])([-1])(modelPillarsLeft));
 
-	// adding a single pillar
+	// Adding pillar to the general struct
 	modelList = STRUCT([modelList,modelPillarsLeft,modelPillarsRight]);
 
-
-	// Mullions
-
-	function getMullion(p, hs){
-
-		var h = 7.05*hs;
-
-		var hz = 0.035;
-
-		var domain = DOMAIN([[0,1],[0,2*PI]])([10,10]);
-
-		var cube = CUBOID([0.0325*p,0.0325*p,(hz)*p]);
-
-		var profile = BEZIER(S0)([
-			[0.016*p,0,(hz)*p],
-			[0.016*p,0,(hz+0.008)*p],
-			[0,0,(hz)*p],
-			[0,0,(hz+0.008)*p],
-				[0,0,(hz+0.008)*p],
-				[0,0,(hz+0.008)*p],
-			[0.0363*p,0,(hz+h/2-0.025)*p],
-				[0.0361*p,0,(hz+h/2-0.018)*p],
-			[0,0,(hz+h/2-0.035)*p],
-			[0.005*p,0,(hz+h-h/7.3)*p],
-			[0,0,(hz+h-h/7.3)*p],
-				[0,0,(hz+h-h/7.3)*p],
-			[0.0112*p,0,(hz+h-h/5.4)*p],
-				[0.0112*p,0,(hz+h-h/5.4)*p],
-				[0.0112*p,0,(hz+h-h/5.4)*p],
-			[0.0112*p,0,(hz+h)*p]
-			]);
-
-
-	 	var profile = ROTATIONAL_SURFACE(profile);
-		var surface = MAP(profile)(domain);
-		
-
-		return STRUCT([T([0,1])([0.016*p,0.016*p])(surface),cube]);
-
-	}
+	//
+	// MULLIONS
+	//
 
 	var mullion = getMullion(p,hs);
 
 	var simplePillar = SIMPLEX_GRID([[0.03*p],[0.03*p],[((9*hs+0.005))*p]]);
 
+	// There are all mullions from the frontal stairs till the farest one
 	var modelMullionsLeft= STRUCT([
 		T([0,1,2])([3.545*p,1.055*p,(hs+1.4*hs/2)*p])(mullion),
 		T([0,1,2])([3.505*p,1.055*p,(hs+4*hs/2)*p])(mullion),
@@ -469,7 +503,7 @@ function mainStructure(){
 		T([0,1,2])([2.663*p,0.82*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.663*p,0.7825*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.663*p,0.745*p,(h1+h2+hs/2.8)*p])(mullion),
-		// lateral
+		// lateral stairs
 		T([0,1,2])([2.663*p,0.65*p,(12.5*hs)*p])(mullion),
 		T([0,1,2])([2.663*p,0.605*p,(11.3*hs)*p])(mullion),
 		T([0,1,2])([2.663*p,0.56*p,(10*hs)*p])(simplePillar),
@@ -479,7 +513,7 @@ function mainStructure(){
 		T([0,1,2])([2.663*p,0.380*p,(4.5*hs)*p])(simplePillar),
 		T([0,1,2])([2.663*p,0.335*p,(3*hs)*p])(mullion),
 		T([0,1,2])([2.663*p,0.290*p,(1.5*hs)*p])(mullion),
-		//h1+h2 lateral
+		// lateral above stairs
 		T([0,1,2])([2.3425*p,0.6375*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.3425*p,0.5925*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.3425*p,0.5475*p,(h1+h2+hs/2.8)*p])(mullion),
@@ -490,7 +524,7 @@ function mainStructure(){
 		T([0,1,2])([2.3425*p,0.3225*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.3425*p,0.2775*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.3425*p,0.2325*p,(h1+h2+hs/2.8)*p])(mullion),
-		//lodge stairs
+		// lodge stairs
 		T([0,1,2])([2.4445*p,1.055*p,(h1+h2+4*hs/2)*p])(mullion),
 		T([0,1,2])([2.4045*p,1.055*p,(h1+h2+6.5*hs/2)*p])(mullion),
 		T([0,1,2])([2.3645*p,1.055*p,(h1+h2+10*hs/2)*p])(mullion),
@@ -504,45 +538,67 @@ function mainStructure(){
 
 	modelList = STRUCT([modelList,modelMullionsLeft,modelMullionsRight]);
 
+	// WALLS
 
-//	DRAW(getLittleColumn(p,hs,0));
-
-    // WALLS
-
-    // Walls under the strairs
-
-    var wallsLeft = STRUCT([TRIANGLE_DOMAIN(1,[[2.7*p,0.24*p,0],[2.7*p,0.72*p,0.035*p],[2.7*p,0.72*p,(h1+h2)*p]]), //lateral stair
-    					//TRIANGLE_DOMAIN(1,[[2.7*p,0.24*p,0],[2.7*p,0.72*p,0.035*p],[2.7*p,0.72*p,(h1+h2)*p]]), //duplicate understair
-    					TRIANGLE_DOMAIN(1,[[3.63*p,1.05*p,0],[3.34*p,1.05*p,0.035*p],[3.34*p,1.05*p,(h1)*p]]),
-    					//TRIANGLE_DOMAIN(1,[[3.63*p,1.05*p,0],[3.34*p,1.05*p,0.035*p],[3.34*p,1.05*p,(h1)*p]]) //duplicate understair
-    					TRIANGLE_DOMAIN(1,[[3.07*p,1.05*p,0],[2.92*p,1.05*p,0],[2.92*p,1.05*p,(h1+h2)*p]]),
-    					TRIANGLE_DOMAIN(1,[[3.07*p,1.05*p,0],[3.07*p,1.05*p,h1*p],[2.92*p,1.05*p,(h1+h2)*p]]),
-
-    					TRIANGLE_DOMAIN(1,[[2.52*p,1.05*p,(h1+h2)*p],[2.195*p,1.05*p,(h1+h2+10.2*hs)*p],[2.195*p,1.05*p,(h1+h2)*p]]), //lodgestairs
-
+    var wallsLeft = STRUCT([
+    					TRIANGLE_DOMAIN(1,[[2.7*p,0.24*p,0],[2.7*p,0.72*p,0],[2.7*p,0.72*p,(h1+h2)*p]]), //lateral stairs
+    					TRIANGLE_DOMAIN(1,[[3.63*p,1.05*p,0],[3.34*p,1.05*p,0],[3.34*p,1.05*p,(h1)*p]]), // lateral
+    					TRIANGLE_DOMAIN(1,[[3.07*p,1.05*p,0],[2.92*p,1.05*p,0],[2.92*p,1.05*p,(h1+h2)*p]]), // lateral
+    					TRIANGLE_DOMAIN(1,[[3.07*p,1.05*p,0],[3.07*p,1.05*p,h1*p],[2.92*p,1.05*p,(h1+h2)*p]]), // stairs
+    					TRIANGLE_DOMAIN(1,[[2.52*p,1.05*p,(h1+h2)*p],[2.195*p,1.05*p,(h1+h2+10.2*hs)*p],[2.195*p,1.05*p,(h1+h2)*p]]) //lodge stairs
     					]);
 
 	var wallsRight = T([1])([3.46*p])(S([1])([-1])(wallsLeft));
 
-    modelList = STRUCT([modelList, wallsLeft, wallsRight]);
+	return COLOR(colors.hue)(STRUCT([modelList, wallsLeft, wallsRight]));
 
-
-	//var stairs
-	//var building
-	//var porch
-	//var roof
-
-	return modelList;
 
 }
+
+
+function buildingWall(){
+
+	function getWall(p,controlPoints){
+		return COLOR(colors.hue)(
+				STRUCT([TRIANGLE_DOMAIN(1,[controlPoints[0]*p,controlPoints[1]*p,controlPoints[3]*p]),TRIANGLE_DOMAIN(1.[controlPoints[1]*p,controlPoints[3]*p,controlPoints[2]*p)]));
+	}
+
+}
+
+function buildingRoof(){
+
+}
+
+function colums(){
+
+}
+
+function buildingComponents(){
+
+}
+
+    // Lodge floor
+
+    var lodgefloor = SIMPLEX_GRID([[-1.7*p, 0.495*p],[-1.05*p,1.36*p]]);
+    lodgefloor = lodgefloor.translate([2],[(h1+h2+10*hs)*p]);
+
+    // BUG: cannot add it in the struct
+    DRAW(lodgefloor); //    modelList = STRUCT([modelList,lodgefloor]);
 
 /*
 	Function charged to create an object Drawer and draw the villa
 */
 function drawVilla(){
 	var drawer = new Drawer();
-	drawer.addMainStructure(mainStructure());
-	drawer.drawMainStructure();
+
+	drawer.addFoundation(foundation());
+	drawer.drawFoundation();
+	drawer.addSteps(steps());
+	drawer.drawSteps();
+	drawer.addBaseComponents(baseComponents());
+	drawer.drawBaseComponents();
+
+	//drawer.all();
 }
 
 drawVilla();
@@ -552,16 +608,3 @@ drawVilla();
 // TO DELETE:
 
 //	DRAW(COLOR([0,0,1])(STRUCT([POLYLINE([[3.63*p,0,0],[3.63*p,3.46*p,0]])])));//,POLYPOINT([[3.6*p,1.09*p,0],[3.64*p,1.09*p,0]])])));
-
-//	//STRUCT([
-//					T([0,1,2])([3.59*p,1.05*p,hs*p])(pillarBaseFrieze),
-	//				T([0,1])([3.595*p,1.055*p])(SIMPLEX_GRID([[0.03*p],[0.03*p],[((8*hs+0.005)+0.04)*p]])),
-	//				T([0,1,2])([3.59*p,1.05*p,((9*hs+0.005))*p])(getRailTop(p,hs,0.04,0.04,0,0))]);
-//
-//			[0.0366*p,0,(hz+h/2-0.022+offset)*p],
-//
-//				[0.0366*p,0,(hz+h/2-0.02+offset)*p],
-//
-//			[0,0,(hz+h/2-0.037+offset)*p],
-//
-//				[0,0,(hz+h/2-0.035+offset)*p],
