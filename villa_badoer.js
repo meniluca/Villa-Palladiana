@@ -560,8 +560,19 @@ function buildingWall(){
 
 	function getWall(p,controlPoints){
 		return COLOR(colors.hue)(
-				STRUCT([TRIANGLE_DOMAIN(1,[controlPoints[0]*p,controlPoints[1]*p,controlPoints[3]*p]),TRIANGLE_DOMAIN(1.[controlPoints[1]*p,controlPoints[3]*p,controlPoints[2]*p)]));
+				STRUCT([
+					TRIANGLE_DOMAIN(1,[PROD([p,controlPoints[0]]),PROD([p,controlPoints[1]]),PROD([p,controlPoints[3]])]),
+					TRIANGLE_DOMAIN(1,[PROD([p,controlPoints[1]]),PROD([p,controlPoints[3]]),PROD([p,controlPoints[2]])])
+					]));
 	}
+
+	// Lodge floor
+
+    var lodgefloor = SIMPLEX_GRID([[-1.7*p, 0.495*p],[-1.05*p,1.36*p]]);
+    lodgefloor = lodgefloor.translate([2],[(h1+h2+10*hs)*p]);
+
+    // BUG: cannot add it in the struct
+    DRAW(lodgefloor); //    modelList = STRUCT([modelList,lodgefloor]);
 
 }
 
@@ -577,13 +588,7 @@ function buildingComponents(){
 
 }
 
-    // Lodge floor
-
-    var lodgefloor = SIMPLEX_GRID([[-1.7*p, 0.495*p],[-1.05*p,1.36*p]]);
-    lodgefloor = lodgefloor.translate([2],[(h1+h2+10*hs)*p]);
-
-    // BUG: cannot add it in the struct
-    DRAW(lodgefloor); //    modelList = STRUCT([modelList,lodgefloor]);
+    
 
 /*
 	Function charged to create an object Drawer and draw the villa
