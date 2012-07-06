@@ -19,6 +19,7 @@ function Drawer(){
 	this.foundation = undefined;
 	this.steps = undefined;
 	this.baseComponents = undefined;
+	this.buildingWall = undefined;
 }
 
 
@@ -56,6 +57,18 @@ Drawer.prototype.drawBaseComponents = function(){
             return;
     }
     return DRAW(this.baseComponents);
+}
+
+Drawer.prototype.addBuildingWall = function(buildingWall){
+    this.buildingWall = buildingWall;
+}
+
+Drawer.prototype.drawBuildingWall = function(){
+    if (this.buildingWall === undefined){
+            alert("Create the model \"buildingWall\" before draw it!");
+            return;
+    }
+    return DRAW(this.buildingWall);
 }
 
 Drawer.prototype.drawAll = function(){
@@ -566,13 +579,25 @@ function buildingWall(){
 					]));
 	}
 
+	// Get proportion
+	var p = scale.proportion || 1;
+
+	// height foundation steps
+    var h1 = 0.16;
+    var h2 = 0.08885;
+    var hs = 0.01777;
+
 	// Lodge floor
 
-    var lodgefloor = SIMPLEX_GRID([[-1.7*p, 0.495*p],[-1.05*p,1.36*p]]);
-    lodgefloor = lodgefloor.translate([2],[(h1+h2+10*hs)*p]);
+	var lodgeFloor = SIMPLEX_GRID([[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2+10*hs-2*hs)*p,2*hs*p]]);
 
-    // BUG: cannot add it in the struct
-    DRAW(lodgefloor); //    modelList = STRUCT([modelList,lodgefloor]);
+   // var lodgefloor = SIMPLEX_GRID([[-1.7*p, 0.495*p],[-1.05*p,1.36*p]]);
+   // lodgefloor = lodgefloor.translate([2],[(h1+h2+10*hs)*p]);
+//
+   // // BUG: cannot add it in the struct
+   // DRAW(lodgefloor); //    modelList = STRUCT([modelList,lodgefloor]);
+
+   return lodgeFloor;
 
 }
 
@@ -602,6 +627,8 @@ function drawVilla(){
 	drawer.drawSteps();
 	drawer.addBaseComponents(baseComponents());
 	drawer.drawBaseComponents();
+	drawer.addBuildingWall(buildingWall());
+	drawer.drawBuildingWall();
 
 	//drawer.all();
 }
