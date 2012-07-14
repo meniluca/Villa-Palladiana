@@ -108,9 +108,9 @@ function Domains(){};
 var domains = new Domains();
 
 domains.stepDomain = DOMAIN([[0,1],[0,1]])([10,1]);
-domains.railTopDomain = DOMAIN([[0,1],[0,1]])([20,1]);
-domains.railBaseDomain = DOMAIN([[0,1],[0,1]])([10,1]);
-domains.mullionDomain = DOMAIN([[0,1],[0,2*PI]])([20,10]);
+domains.railTopDomain = DOMAIN([[0,1],[0,1]])([20,1]); // 20
+domains.railBaseDomain = DOMAIN([[0,1],[0,1]])([10,1]); // 10, 1
+domains.mullionDomain = DOMAIN([[0,1],[0,2*PI]])([20,10]); // 10,10 - 20,10
 
 /*
     Function that generates villa's foundation
@@ -130,8 +130,8 @@ function foundation(){
 			COLOR(colors.foundation)(SIMPLEX_GRID([[-0.18*p,1.92*p],[-0.18*p,3.1*p],[-h1*p,h2*p]])), // B
 			COLOR(colors.hue)(SIMPLEX_GRID([[-2.24*p,0.14*p],[3.46*p],[h1*p]])), // A'
 			COLOR(colors.hue)(SIMPLEX_GRID([[-2.1*p,0.28*p],[-0.18*p,3.1*p],[-h1*p,h2*p]])), // B'
-			COLOR(colors.hue)(SIMPLEX_GRID([[-2.38*p,0.32*p],[-0.72*p,2.02*p],[(h1+h2)*p]])), // C
-			//COLOR(colors.hue)(SIMPLEX_GRID([[-2.38*p,0.32*p],[-0.86*p,1.74*p],[(h1+h2)*p]])), // C da sostituire con la porta :)
+			//COLOR(colors.hue)(SIMPLEX_GRID([[-2.38*p,0.32*p],[-0.72*p,2.02*p],[(h1+h2)*p]])), // C
+			COLOR(colors.hue)(SIMPLEX_GRID([[-2.38*p,0.32*p],[-0.86*p,1.74*p],[(h1+h2)*p]])), // C da sostituire con la porta :)
 			COLOR(colors.hue)(SIMPLEX_GRID([[-2.7*p,0.22*p],[-0.86*p,1.74*p],[(h1+h2)*p]])), // D
 			COLOR(colors.hue)(SIMPLEX_GRID([[-3.07*p,0.27*p],[-1.05*p,1.36*p],[h1*p]]))
  		]);
@@ -422,13 +422,13 @@ function baseComponents(){
 	railLeft6 = T([0,1,2])([2.66*p,0.72*p,(h2+h1)*p])(railLeft6);
 	railLeftTop6 = T([0,1,2])([2.66*p,0.72*p,(h1+h2+8*hs+0.005)*p])(railLeftTop6);
 
-	var railLeft7 = getRailBase(p,hs,0.48,(h1+h2),0.0015);
+	var railLeft7 = getRailBase(p,hs,0.448,(h1+h2+0.001),0.0015); // 48  + hs
 	var railLeftTop7 = getRailTop(p,hs,0.455,0.04,(h1+h2),0.0025);
 	railLeft7 = T([0,1])([2.66*p,0.25*p])(railLeft7);
 	railLeftTop7 = T([0,1,2])([2.66*p,0.25*p,(8*hs+0.005)*p])(railLeftTop7);
 
 	var railLeft8 = getRailBase(p,hs,0.32,10*hs,0.0015);
-	var railLeftTop8 = getRailTop(p,hs,0.27,0.04,10.05*hs,0.0026);
+	var railLeftTop8 = getRailTop(p,hs,0.27,0.04,9*hs,0.0026);
 	railLeft8 = T([0,1,2])([2.52*p,1.05*p,(h1+h2)*p])(R([0,1])(PI/2)(railLeft8));
 	railLeftTop8 = T([0,1,2])([2.51*p,1.05*p,(h1+h2+8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop8));
 
@@ -472,7 +472,8 @@ function baseComponents(){
 				 T([0,2])([-0.52*p,(h1-hs)*p])(pillarStructStair), T([0,2])([-0.51*p,(h1-hs)*p])(pillarEnv), T([0,2])([-0.53*p,(h1-hs)*p])(pillarEnv),
 				 T([0,2])([-0.71*p,(h1+h2-hs)*p])(pillarStructStair), T([0,1,2])([-0.71*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair), 
 				 T([0,1,2])([-0.93*p,-0.19*p,(h1+h2-hs)*p])(pillarStructStair), T([0,1,2])([-0.93*p,-0.35*p,(h1+h2-hs)*p])(pillarStructStair),
-				 T([0,1,2])([-0.93*p,-0.81*p,0])(pillarStruct), T([0,2])([-1.39 *p,(h1+h2+9*hs)*p])(pillarStruct), T([0,2])([-1.11*p,(h1+h2)*p])(pillarStruct),
+				 T([0,1,2])([-0.93*p,-0.81*p,0])(pillarStruct),
+				 T([0,2])([-1.39 *p,(h1+h2+8*hs)*p])(pillarStruct), T([0,2])([-1.11*p,(h1+h2)*p])(pillarStruct),
 				 T([0,1,2])([-1.25*p,-0.37*p,(h1+h2-hs)*p])(pillarStruct), T([0,1,2])([-1.25*p,-0.87*p,(h1+h2-hs)*p])(pillarStructStair) ]);
 
 	var modelPillarsRight = T([1])([3.46*p])(S([1])([-1])(modelPillarsLeft));
@@ -517,7 +518,7 @@ function baseComponents(){
 		T([0,1,2])([2.663*p,0.7825*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.663*p,0.745*p,(h1+h2+hs/2.8)*p])(mullion),
 		// lateral stairs
-		T([0,1,2])([2.663*p,0.65*p,(12.5*hs)*p])(mullion),
+		T([0,1,2])([2.663*p,0.65*p,(12.8*hs)*p])(mullion),
 		T([0,1,2])([2.663*p,0.605*p,(11.3*hs)*p])(mullion),
 		T([0,1,2])([2.663*p,0.56*p,(10*hs)*p])(simplePillar),
 		T([0,1,2])([2.663*p,0.515*p,(8.6*hs)*p])(mullion),
@@ -540,10 +541,10 @@ function baseComponents(){
 		// lodge stairs
 		T([0,1,2])([2.4445*p,1.055*p,(h1+h2+4*hs/2)*p])(mullion),
 		T([0,1,2])([2.4045*p,1.055*p,(h1+h2+6.5*hs/2)*p])(mullion),
-		T([0,1,2])([2.3645*p,1.055*p,(h1+h2+10*hs/2)*p])(mullion),
-		T([0,1,2])([2.3245*p,1.055*p,(h1+h2+12.5*hs/2)*p])(mullion),
-		T([0,1,2])([2.2845*p,1.055*p,(h1+h2+15.4*hs/2)*p])(mullion),
-		T([0,1,2])([2.2445*p,1.055*p,(h1+h2+18*hs/2)*p])(mullion),
+		T([0,1,2])([2.3645*p,1.055*p,(h1+h2+9*hs/2)*p])(mullion),
+		T([0,1,2])([2.3245*p,1.055*p,(h1+h2+11*hs/2)*p])(mullion),
+		T([0,1,2])([2.2845*p,1.055*p,(h1+h2+13.5*hs/2)*p])(mullion),
+		T([0,1,2])([2.2445*p,1.055*p,(h1+h2+16*hs/2)*p])(mullion),
 		]);
 
 
@@ -554,14 +555,19 @@ function baseComponents(){
 	// WALLS
 
     var wallsLeft = STRUCT([
-    					TRIANGLE_DOMAIN(1,[[2.7*p,0.24*p,0],[2.7*p,0.72*p,0],[2.7*p,0.72*p,(h1+h2)*p]]), //lateral stairs
+    					TRIANGLE_DOMAIN(1,[[2.7*p,0.24*p,0],[2.7*p,0.70*p,0],[2.7*p,0.70*p,(h1+h2+0.002)*p]]), //lateral stairs
+    					TRIANGLE_DOMAIN(1,[[2.66*p,0.86*p,(h1+h2)*p],[2.66*p,0.72*p,(h1+h2)*p],[2.38*p,0.72*p,(h1+h2)*p]]), // cover up lateral stairs
+						TRIANGLE_DOMAIN(1,[[2.66*p,0.86*p,(h1+h2)*p],[2.38*p,0.86*p,(h1+h2)*p],[2.38*p,0.72*p,(h1+h2)*p]]), // cover up lateral stairs
     					TRIANGLE_DOMAIN(1,[[3.63*p,1.05*p,0],[3.34*p,1.05*p,0],[3.34*p,1.05*p,(h1)*p]]), // lateral
     					TRIANGLE_DOMAIN(1,[[3.07*p,1.05*p,0],[2.92*p,1.05*p,0],[2.92*p,1.05*p,(h1+h2)*p]]), // lateral
     					TRIANGLE_DOMAIN(1,[[3.07*p,1.05*p,0],[3.07*p,1.05*p,h1*p],[2.92*p,1.05*p,(h1+h2)*p]]), // stairs
-    					TRIANGLE_DOMAIN(1,[[2.52*p,1.05*p,(h1+h2)*p],[2.195*p,1.05*p,(h1+h2+10.2*hs)*p],[2.195*p,1.05*p,(h1+h2)*p]]) //lodge stairs
+    					TRIANGLE_DOMAIN(1,[[2.52*p,1.05*p,(h1+h2)*p],[2.195*p,1.05*p,(h1+h2+10.2*hs)*p],[2.195*p,1.05*p,(h1+h2)*p]]), //lodge stairs
+    					TRIANGLE_DOMAIN(1,[[2.52*p,1.09*p,(h1+h2)*p],[2.195*p,1.09*p,(h1+h2+10.2*hs)*p],[2.195*p,1.09*p,(h1+h2)*p]])
     					]);
 
 	var wallsRight = T([1])([3.46*p])(S([1])([-1])(wallsLeft));
+
+	// fare porta !!!
 
 	return COLOR(colors.hue)(STRUCT([modelList, wallsLeft, wallsRight]));
 
@@ -583,23 +589,54 @@ function buildingWall(){
 	var p = scale.proportion || 1;
 
 	// height foundation steps
-    var h1 = 0.16;
-    var h2 = 0.08885;
-    var hs = 0.01777;
+	var h1 = 0.16;
+	var h2 = 0.08885;
+	var hs = 0.01777;
 
-	// Lodge floor
+	// height building
+	var hb = 1.37;
+	var hc = 1.07;
 
-	var lodgeFloor = SIMPLEX_GRID([[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2+10*hs-2*hs)*p,2*hs*p]]);
+	// building floors and basements
+	var floor = SIMPLEX_GRID([[-0.415*p,1.73*p],[-0.415*p,2.63*p],[-(h1+h2+10*hs-1.5*hs)*p,1.5*hs*p]]);
+	var basement = SIMPLEX_GRID([[-0.415*p,1.73*p],[-0.415*p,2.63*p],[-(h1+h2)*p,2*hs*p]]);
+	// sporgenza
+	//var topBasement = SIMPLEX_GRID([[-0.415*p,1.73*p],[-0.415*p,2.63*p],[-(h1+h2)*p,2*hs*p]]);
 
-   // var lodgefloor = SIMPLEX_GRID([[-1.7*p, 0.495*p],[-1.05*p,1.36*p]]);
-   // lodgefloor = lodgefloor.translate([2],[(h1+h2+10*hs)*p]);
-//
-   // // BUG: cannot add it in the struct
-   // DRAW(lodgefloor); //    modelList = STRUCT([modelList,lodgefloor]);
+	var lodgeFloor = SIMPLEX_GRID([[-2.14*p, 0.055*p],[-1.05*p,1.36*p],[-(h1+h2)*p,10*hs*p]]);
 
-   return lodgeFloor;
+	DRAW(COLOR([1,0,0,0.5])(BOUNDARY(SIMPLEX_GRID([[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2+0.0001)*p,(hb-0.0001)*p]])))); // building wall
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.05*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.293*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.536*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.814*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.057*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.3*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+
+	return COLOR(colors.hue)(STRUCT([floor,lodgeFloor,basement]));
+
+	// confini building wall 	[[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2+10*hs-2*hs)*p,2*hs*p]]);
+
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function buildingRoof(){
 
