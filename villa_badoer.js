@@ -594,18 +594,17 @@ function buildingWall(){
 	var hs = 0.01777;
 
 	// height building
-	var hb = 1.37;
-	var hc = 1.07;
+	var hb = 0.795+h1+h2;
+	var hc = 0.745;
 
 	// building floors and basements
-	var floor = SIMPLEX_GRID([[-0.415*p,1.73*p],[-0.415*p,2.63*p],[-(h1+h2+10*hs-1.5*hs)*p,1.5*hs*p]]);
-	var basement = SIMPLEX_GRID([[-0.415*p,1.73*p],[-0.415*p,2.63*p],[-(h1+h2)*p,2*hs*p]]);
-	// sporgenza
-	//var topBasement = SIMPLEX_GRID([[-0.415*p,1.73*p],[-0.415*p,2.63*p],[-(h1+h2)*p,2*hs*p]]);
+	var floor = SIMPLEX_GRID([[-0.41*p,1.74*p],[-0.41*p,2.64*p],[-(h1+h2+10*hs-1.5*hs)*p,1.5*hs*p]]);
+	var basement = SIMPLEX_GRID([[-0.41*p,1.74*p],[-0.41*p,2.64*p],[-(h1+h2)*p,2*hs*p]]);
+	var topProjection = SIMPLEX_GRID([[-0.415*p,1.73*p],[-0.415*p,2.63*p],[-(h1+h2+hb-(hb-hc-10*hs))*p,(hb-hc-10*hs)*p]]);
 
 	var lodgeFloor = SIMPLEX_GRID([[-2.14*p, 0.055*p],[-1.05*p,1.36*p],[-(h1+h2)*p,10*hs*p]]);
 
-	DRAW(COLOR([1,0,0,0.5])(BOUNDARY(SIMPLEX_GRID([[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2+0.0001)*p,(hb-0.0001)*p]])))); // building wall
+	DRAW(COLOR([1,0,0,0.5])(BOUNDARY(SIMPLEX_GRID([[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2)*p,(hb)*p]])))); // building wall
 	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.05*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
 	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.293*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
 	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.536*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
@@ -613,7 +612,7 @@ function buildingWall(){
 	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.057*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
 	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.3*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
 
-	return COLOR(colors.hue)(STRUCT([floor,lodgeFloor,basement]));
+	return COLOR(colors.hue)(STRUCT([floor,lodgeFloor,basement,topProjection]));
 
 	// confini building wall 	[[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2+10*hs-2*hs)*p,2*hs*p]]);
 
