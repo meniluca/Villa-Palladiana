@@ -20,6 +20,7 @@ function Drawer(){
 	this.steps = undefined;
 	this.baseComponents = undefined;
 	this.buildingWall = undefined;
+	this.ledge = undefined;
 }
 
 
@@ -71,8 +72,21 @@ Drawer.prototype.drawBuildingWall = function(){
     return DRAW(this.buildingWall);
 }
 
+Drawer.prototype.addLedge = function(ledge){
+    this.ledge = ledge;
+}
+
+Drawer.prototype.drawLedge = function(){
+    if (this.ledge === undefined){
+            alert("Create the model \"ledge\" before draw it!");
+            return;
+    }
+    return DRAW(this.ledge);
+}
+
+// draw all components
 Drawer.prototype.drawAll = function(){
-    return DRAW(STRUCT([this.mainStructure,this.foundation]));
+    return DRAW(STRUCT([this.mainStructure,this.foundation])); // TODO
 }
 
 
@@ -111,6 +125,7 @@ domains.stepDomain = DOMAIN([[0,1],[0,1]])([10,1]);
 domains.railTopDomain = DOMAIN([[0,1],[0,1]])([25,1]); // 20
 domains.railBaseDomain = DOMAIN([[0,1],[0,1]])([10,1]); // 10, 1
 domains.mullionDomain = DOMAIN([[0,1],[0,2*PI]])([20,10]); // 10,10 - 20,10
+domains.ledgeDomain = DOMAIN([[0,1],[0,1]])([50,1]);
 
 /*
     Function that generates villa's foundation
@@ -689,6 +704,206 @@ function buildingWall(){
 
 	return COLOR(colors.hue)(STRUCT([floor,lodgeFloor,basement,topProjection,walls]));
 
+}
+
+// confini building wall 	[[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2+10*hs-2*hs)*p,2*hs*p]]);
+// 	DRAW(COLOR([1,0,0,0.5])(BOUNDARY(SIMPLEX_GRID([[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2)*p,(hb)*p]])))); // building wall
+
+
+
+// cornicione
+function ledge(){
+
+	// Get proportion
+	var p = scale.proportion || 1;
+
+	// height foundation steps
+	var h1 = 0.16;
+	var h2 = 0.08885;
+	var hs = 0.01777;
+
+	// height building
+	var hb = 0.795+h1+h2;
+	var hc = 0.745;
+
+	// height ledge hl*2
+	var hl = (hb-hc-10*hs)/2;
+	var prof = 0.08;
+
+	var frontBaseLedgeLeft = NUBS(S0)(1)([0,0,0,1,2,3,4,5,6,6,6])(
+						[[0.012*p,0,hl*p],[0.012*p,0,hl*p],
+						[0.007*p,0.005*p,(hl-1/4*hl)*p],
+						[0.006*p,0.006*p,(hl-2/4*hl)*p],
+						[0.004*p,0.008*p,(hl-2/4*hl)*p],
+						[0.003*p,0.009*p,(hl-3/4*hl)*p],
+						[0.001*p,0.011*p,(hl-3/4*hl)*p],
+						[0,0.012*p,0],[0,0.012*p,0]
+						]);
+
+	var frontBaseLedgeLeftBack = NUBS(S0)(1)([0,0,0,1,2,3,4,5,6,6,6])(
+						[[(0.012-prof)*p,0,hl*p],[(0.012-prof)*p,0,hl*p],
+						[(0.007-prof)*p,0.005*p,(hl-1/4*hl)*p],
+						[(0.006-prof)*p,0.006*p,(hl-2/4*hl)*p],
+						[(0.004-prof)*p,0.008*p,(hl-2/4*hl)*p],
+						[(0.003-prof)*p,0.009*p,(hl-3/4*hl)*p],
+						[(0.001-prof)*p,0.011*p,(hl-3/4*hl)*p],
+						[-prof*p,0.012*p,0],[-prof*p,0.012*p,0]
+						]);
+
+	var frontBaseLedgeRight = NUBS(S0)(1)([0,0,0,1,2,3,4,5,6,6,6])(
+						[[0.012*p,1.36*p,hl*p],[0.012*p,1.36*p,hl*p],
+						[0.007*p,(1.36-0.005)*p,(hl-1/4*hl)*p],
+						[0.006*p,(1.36-0.006)*p,(hl-2/4*hl)*p],
+						[0.004*p,(1.36-0.008)*p,(hl-2/4*hl)*p],
+						[0.003*p,(1.36-0.009)*p,(hl-3/4*hl)*p],
+						[0.001*p,(1.36-0.011)*p,(hl-3/4*hl)*p],
+						[0,(1.36-0.012)*p,0],[0,(1.36-0.012)*p,0]
+						]);
+
+	var frontBaseLedgeRightBack = NUBS(S0)(1)([0,0,0,1,2,3,4,5,6,6,6])(
+						[[(0.012-prof)*p,1.36*p,hl*p],[(0.012-prof)*p,1.36*p,hl*p],
+						[(0.007-prof)*p,(1.36-0.005)*p,(hl-1/4*hl)*p],
+						[(0.006-prof)*p,(1.36-0.006)*p,(hl-2/4*hl)*p],
+						[(0.004-prof)*p,(1.36-0.008)*p,(hl-2/4*hl)*p],
+						[(0.003-prof)*p,(1.36-0.009)*p,(hl-3/4*hl)*p],
+						[(0.001-prof)*p,(1.36-0.011)*p,(hl-3/4*hl)*p],
+						[-prof*p,(1.36-0.012)*p,0],[-prof*p,(1.36-0.012)*p,0]
+						]);
+
+
+	var frontTopLedgeLeft = NUBS(S0)(2)([0,0,0,1,2,3,4,4,4])(
+						[[0.012*p,0,hl*p],
+						[0.016*p,-0.004*p,(hl+hl/8)*p],
+						[0.012*p,0,(hl+hl/4)*p],[0.012*p,0,(hl+hl/4)*p],
+						[0.013*p,-0.001*p,(hl+2/3*hl)*p],
+						[0,0.012*p,2*hl*p]
+						]);
+
+	var frontTopLedgeLeftBack = NUBS(S0)(2)([0,0,0,1,2,3,4,4,4])(
+						[[(0.012-prof)*p,0,hl*p],
+						[(0.016-prof)*p,-0.004*p,(hl+hl/8)*p],
+						[(0.012-prof)*p,0,(hl+hl/4)*p],[(0.012-prof)*p,0,(hl+hl/4)*p],
+						[(0.013-prof)*p,-0.001*p,(hl+2/3*hl)*p],
+						[-prof*p,0.012*p,2*hl*p]
+						]);
+
+	var frontTopLedgeRight = NUBS(S0)(2)([0,0,0,1,2,3,4,4,4])(
+						[[0.012*p,1.36*p,hl*p],
+						[0.016*p,(1.36+0.004)*p,(hl+hl/8)*p],
+						[0.012*p,1.36*p,(hl+hl/4)*p],[0.012*p,1.36*p,(hl+hl/4)*p],
+						[0.013*p,(1.36+0.001)*p,(hl+2/3*hl)*p],
+						[0,(1.36-0.012)*p,2*hl*p]
+						]);
+
+	var frontTopLedgeRightBack = NUBS(S0)(2)([0,0,0,1,2,3,4,4,4])(
+						[[(0.012-prof)*p,1.36*p,hl*p],
+						[(0.016-prof)*p,(1.36+0.004)*p,(hl+hl/8)*p],
+						[(0.012-prof)*p,1.36*p,(hl+hl/4)*p],[(0.012-prof)*p,1.36*p,(hl+hl/4)*p],
+						[(0.013-prof)*p,(1.36+0.001)*p,(hl+2/3*hl)*p],
+						[-prof*p,(1.36-0.012)*p,2*hl*p]
+						]);
+
+	var frontLedge = STRUCT([
+				MAP(BEZIER(S1)([frontBaseLedgeLeft,frontBaseLedgeRight]))(domains.railTopDomain),
+				MAP(BEZIER(S1)([frontBaseLedgeLeft,frontBaseLedgeLeftBack]))(domains.railTopDomain),
+				MAP(BEZIER(S1)([frontBaseLedgeRight,frontBaseLedgeRightBack]))(domains.railTopDomain),
+				MAP(BEZIER(S1)([frontTopLedgeLeft,frontTopLedgeRight]))(domains.railTopDomain),
+				MAP(BEZIER(S1)([frontTopLedgeLeft,frontTopLedgeLeftBack]))(domains.railTopDomain),
+				MAP(BEZIER(S1)([frontTopLedgeRight,frontTopLedgeRightBack]))(domains.railTopDomain),
+				TRIANGLE_DOMAIN(1,[[0,0.012*p,0],[0,(1.36-0.012)*p,0],[-prof*p,0.012*p,0]]),
+				TRIANGLE_DOMAIN(1,[[0,(1.36-0.012)*p,0],[-prof*p,0.012*p,0],[-prof*p,(1.36-0.012)*p,0]]),
+			]);
+
+	frontLedge = T([0,1,2])([2.19*p,1.05*p,(hb+2*hl+0.0065)*p])(frontLedge);
+
+	//DRAW(CUBOID([0.5*p,0.5*p,(hb+10*hs)*p]));  //TODO delete
+
+	//
+	// Ledge
+	//
+
+	var ledgeProfileLeft = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
+						[[0,0.060*p,0],
+						[0.001*p,0.059*p,0],[0.001*p,0.059*p,0],
+						[0.001*p,0.059*p,0.003*p],
+						[0.005*p,0.055*p,0.005*p],
+						[0.005*p,0.055*p,0.008*p],[0.005*p,0.055*p,0.008*p],
+						[0.006*p,0.054*p,0.008*p],[0.006*p,0.054*p,0.008*p],
+						[0.006*p,0.054*p,0.015*p],
+						[0.014*p,0.046*p,0.018*p],
+						[0.014*p,0.046*p,0.023*p],[0.014*p,0.046*p,0.023*p],
+						[0.015*p,0.045*p,0.023*p],[0.015*p,0.045*p,0.023*p],
+						[0.015*p,0.045*p,0.046*p],[0.015*p,0.045*p,0.046*p],
+						[0.019*p,0.041*p,0.046*p],[0.019*p,0.041*p,0.046*p],
+						[0.019*p,0.041*p,0.050*p],[0.019*p,0.041*p,0.050*p], // a
+						[0.045*p,0.015*p,0.050*p],[0.045*p,0.015*p,0.050*p],
+						[0.045*p,0.015*p,0.062*p],[0.045*p,0.015*p,0.062*p],
+						[0.053*p,0.007*p,0.062*p],
+						[0.053*p,0.007*p,0.082*p],
+						[0.060*p,0,0.082*p],[0.060*p,0,0.082*p], 
+						[0.060*p,0,0.084*p], //33
+						]);
+
+	var len = 2.74;
+
+	var ledgeProfileRigth = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
+						[[0,(len-0.060)*p,0],
+						[0.001*p,(len-0.059)*p,0],[0.001*p,(len-0.059)*p,0],
+						[0.001*p,(len-0.059)*p,0.003*p],
+						[0.005*p,(len-0.055)*p,0.005*p],
+						[0.005*p,(len-0.055)*p,0.008*p],[0.005*p,(len-0.055)*p,0.008*p],
+						[0.006*p,(len-0.054)*p,0.008*p],[0.006*p,(len-0.054)*p,0.008*p],
+						[0.006*p,(len-0.054)*p,0.015*p],
+						[0.014*p,(len-0.046)*p,0.018*p],
+						[0.014*p,(len-0.046)*p,0.023*p],[0.014*p,(len-0.046)*p,0.023*p],
+						[0.015*p,(len-0.045)*p,0.023*p],[0.015*p,(len-0.045)*p,0.023*p],
+						[0.015*p,(len-0.045)*p,0.046*p],[0.015*p,(len-0.045)*p,0.046*p],
+						[0.019*p,(len-0.041)*p,0.046*p],[0.019*p,(len-0.041)*p,0.046*p],
+						[0.019*p,(len-0.041)*p,0.050*p],[0.019*p,(len-0.041)*p,0.050*p], // a
+						[0.045*p,(len-0.015)*p,0.050*p],[0.045*p,(len-0.015)*p,0.050*p],
+						[0.045*p,(len-0.015)*p,0.062*p],[0.045*p,(len-0.015)*p,0.062*p],
+						[0.053*p,(len-0.007)*p,0.062*p],
+						[0.053*p,(len-0.007)*p,0.082*p],
+						[0.060*p,len*p,0.082*p],[0.060*p,len*p,0.082*p], 
+						[0.060*p,len*p,0.084*p], //33
+						]);
+	
+	var ledgeLong = MAP(BEZIER(S1)([ledgeProfileLeft,ledgeProfileRigth]))(domains.ledgeDomain);
+
+	len = 1.83;
+
+	var ledgeProfileRigth = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
+						[[0,(len-0.060)*p,0],
+						[0.001*p,(len-0.059)*p,0],[0.001*p,(len-0.059)*p,0],
+						[0.001*p,(len-0.059)*p,0.003*p],
+						[0.005*p,(len-0.055)*p,0.005*p],
+						[0.005*p,(len-0.055)*p,0.008*p],[0.005*p,(len-0.055)*p,0.008*p],
+						[0.006*p,(len-0.054)*p,0.008*p],[0.006*p,(len-0.054)*p,0.008*p],
+						[0.006*p,(len-0.054)*p,0.015*p],
+						[0.014*p,(len-0.046)*p,0.018*p],
+						[0.014*p,(len-0.046)*p,0.023*p],[0.014*p,(len-0.046)*p,0.023*p],
+						[0.015*p,(len-0.045)*p,0.023*p],[0.015*p,(len-0.045)*p,0.023*p],
+						[0.015*p,(len-0.045)*p,0.046*p],[0.015*p,(len-0.045)*p,0.046*p],
+						[0.019*p,(len-0.041)*p,0.046*p],[0.019*p,(len-0.041)*p,0.046*p],
+						[0.019*p,(len-0.041)*p,0.050*p],[0.019*p,(len-0.041)*p,0.050*p], // a
+						[0.045*p,(len-0.015)*p,0.050*p],[0.045*p,(len-0.015)*p,0.050*p],
+						[0.045*p,(len-0.015)*p,0.062*p],[0.045*p,(len-0.015)*p,0.062*p],
+						[0.053*p,(len-0.007)*p,0.062*p],
+						[0.053*p,(len-0.007)*p,0.082*p],
+						[0.060*p,len*p,0.082*p],[0.060*p,len*p,0.082*p], 
+						[0.060*p,len*p,0.084*p], //33
+						]);
+
+	var ledgeShort = MAP(BEZIER(S1)([ledgeProfileLeft,ledgeProfileRigth]))(domains.ledgeDomain);
+
+	return COLOR(colors.hue)(STRUCT([
+				frontLedge,
+				T([0,1,2])([2.145*p,0.355*p,(hb+10*hs+hl+0.011)*p])(ledgeLong),
+			])
+		);
 
 
 }
@@ -697,21 +912,10 @@ function buildingWall(){
 
 
 
-// confini building wall 	[[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2+10*hs-2*hs)*p,2*hs*p]]);
 
+function tympanum(){
 
-// 	DRAW(COLOR([1,0,0,0.5])(BOUNDARY(SIMPLEX_GRID([[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2)*p,(hb)*p]])))); // building wall
-
-
-
-
-
-
-
-
-
-
-
+}
 
 function buildingRoof(){
 
@@ -721,6 +925,7 @@ function colums(){
 
 }
 
+// finestre porte
 function buildingComponents(){
 
 }
@@ -742,6 +947,8 @@ function drawVilla(){
 	drawer.addBuildingWall(buildingWall());
 	drawer.drawBuildingWall();
 
+	drawer.addLedge(ledge());
+	drawer.drawLedge();
 	//drawer.all();
 }
 
