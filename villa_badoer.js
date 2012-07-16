@@ -108,7 +108,7 @@ function Domains(){};
 var domains = new Domains();
 
 domains.stepDomain = DOMAIN([[0,1],[0,1]])([10,1]);
-domains.railTopDomain = DOMAIN([[0,1],[0,1]])([20,1]); // 20
+domains.railTopDomain = DOMAIN([[0,1],[0,1]])([25,1]); // 20
 domains.railBaseDomain = DOMAIN([[0,1],[0,1]])([10,1]); // 10, 1
 domains.mullionDomain = DOMAIN([[0,1],[0,2*PI]])([20,10]); // 10,10 - 20,10
 
@@ -393,7 +393,7 @@ function baseComponents(){
 
 	// Rail left divided in parts, from the bottom till the top one (look at the plant)
 	var railLeft1 = getRailBase(p,hs,0.29,h1,0.0015);
-	var railLeftTop1 = getRailTop(p,hs,0.29,0.04,h1,0.0025);
+	var railLeftTop1 = getRailTop(p,hs,0.29,0.04,h1,0.0027);
 	railLeft1 = T([0,1])([3.63*p,1.05*p])(R([0,1])(PI/2)(railLeft1));
 	railLeftTop1 = T([0,1,2])([3.62*p,1.05*p,(8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop1));
 
@@ -403,7 +403,7 @@ function baseComponents(){
 	railLeftTop2 = T([0,1,2])([3.34*p,1.05*p,(h1+8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop2));
 
 	var railLeft3 = getRailBase(p,hs,0.15,h2,0.0015);
-	var railLeftTop3 = getRailTop(p,hs,0.155,0.04,h2,0.0025);
+	var railLeftTop3 = getRailTop(p,hs,0.155,0.04,h2,0.0027);
 	railLeft3 = T([0,1,2])([3.07*p,1.05*p,h1*p])(R([0,1])(PI/2)(railLeft3));
 	railLeftTop3 = T([0,1,2])([3.0725*p,1.05*p,(h1+8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop3));
 
@@ -423,12 +423,12 @@ function baseComponents(){
 	railLeftTop6 = T([0,1,2])([2.66*p,0.72*p,(h1+h2+8*hs+0.005)*p])(railLeftTop6);
 
 	var railLeft7 = getRailBase(p,hs,0.448,(h1+h2+0.001),0.0015); // 48  + hs
-	var railLeftTop7 = getRailTop(p,hs,0.455,0.04,(h1+h2),0.0025);
+	var railLeftTop7 = getRailTop(p,hs,0.455,0.04,(h1+h2),0.0027);
 	railLeft7 = T([0,1])([2.66*p,0.25*p])(railLeft7);
 	railLeftTop7 = T([0,1,2])([2.66*p,0.25*p,(8*hs+0.005)*p])(railLeftTop7);
 
 	var railLeft8 = getRailBase(p,hs,0.32,10*hs,0.0015);
-	var railLeftTop8 = getRailTop(p,hs,0.27,0.04,9*hs,0.0026);
+	var railLeftTop8 = getRailTop(p,hs,0.27,0.04,9*hs,0.0027);
 	railLeft8 = T([0,1,2])([2.52*p,1.05*p,(h1+h2)*p])(R([0,1])(PI/2)(railLeft8));
 	railLeftTop8 = T([0,1,2])([2.51*p,1.05*p,(h1+h2+8*hs+0.005)*p])(R([0,1])(PI/2)(railLeftTop8));
 
@@ -520,21 +520,21 @@ function baseComponents(){
 		// lateral stairs
 		T([0,1,2])([2.663*p,0.65*p,(12.8*hs)*p])(mullion),
 		T([0,1,2])([2.663*p,0.605*p,(11.3*hs)*p])(mullion),
-		T([0,1,2])([2.663*p,0.56*p,(10*hs)*p])(simplePillar),
+		T([0,1,2])([2.665*p,0.56*p,(10*hs)*p])(simplePillar),
 		T([0,1,2])([2.663*p,0.515*p,(8.6*hs)*p])(mullion),
 		T([0,1,2])([2.663*p,0.470*p,(7.1*hs)*p])(mullion),
 		T([0,1,2])([2.663*p,0.425*p,(6*hs)*p])(mullion),
-		T([0,1,2])([2.663*p,0.380*p,(4.5*hs)*p])(simplePillar),
+		T([0,1,2])([2.665*p,0.380*p,(4.5*hs)*p])(simplePillar),
 		T([0,1,2])([2.663*p,0.335*p,(3*hs)*p])(mullion),
 		T([0,1,2])([2.663*p,0.290*p,(1.5*hs)*p])(mullion),
 		// lateral above stairs
 		T([0,1,2])([2.3425*p,0.6375*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.3425*p,0.5925*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.3425*p,0.5475*p,(h1+h2+hs/2.8)*p])(mullion),
-		T([0,1,2])([2.3425*p,0.5025*p,(h1+h2+hs/2.8)*p])(simplePillar),
+		T([0,1,2])([2.3449*p,0.5025*p,(h1+h2+hs/2.8)*p])(simplePillar),
 		T([0,1,2])([2.3425*p,0.4575*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.3425*p,0.4125*p,(h1+h2+hs/2.8)*p])(mullion),
-		T([0,1,2])([2.3425*p,0.3675*p,(h1+h2+hs/2.8)*p])(simplePillar),
+		T([0,1,2])([2.3449*p,0.3675*p,(h1+h2+hs/2.8)*p])(simplePillar),
 		T([0,1,2])([2.3425*p,0.3225*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.3425*p,0.2775*p,(h1+h2+hs/2.8)*p])(mullion),
 		T([0,1,2])([2.3425*p,0.2325*p,(h1+h2+hs/2.8)*p])(mullion),
@@ -601,10 +601,85 @@ function buildingWall(){
 	var floor = SIMPLEX_GRID([[-0.41*p,1.74*p],[-0.41*p,2.64*p],[-(h1+h2+10*hs-1.5*hs)*p,1.5*hs*p]]);
 	var basement = SIMPLEX_GRID([[-0.41*p,1.74*p],[-0.41*p,2.64*p],[-(h1+h2)*p,2*hs*p]]);
 	var topProjection = SIMPLEX_GRID([[-0.415*p,1.73*p],[-0.415*p,2.63*p],[-(h1+h2+hb-(hb-hc-10*hs))*p,(hb-hc-10*hs)*p]]);
-
 	var lodgeFloor = SIMPLEX_GRID([[-2.14*p, 0.055*p],[-1.05*p,1.36*p],[-(h1+h2)*p,10*hs*p]]);
 
-	DRAW(COLOR([1,0,0,0.5])(BOUNDARY(SIMPLEX_GRID([[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2)*p,(hb)*p]])))); // building wall
+	// wall inferior part
+	var infWallPart01 = getWall(p,[[0.42,0.42,h1+h2+2*hs],[2.14,0.42,h1+h2+2*hs],[2.14,0.42,h1+h2+3.5*hs],[0.42,0.42,h1+h2+3.5*hs]]); // lateral parts left
+	var infWallPart02 = getWall(p,[[0.42,0.42,h1+h2+7.5*hs],[2.14,0.42,h1+h2+7.5*hs],[2.14,0.42,h1+h2+8.5*hs],[0.42,0.42,h1+h2+8.5*hs]]);
+	var infWallPart03 = getWall(p,[[2.14,0.42,h1+h2+7.5*hs],[2.14,1.05,h1+h2+7.5*hs],[2.14,1.05,h1+h2+8.5*hs],[2.14,0.42,h1+h2+8.5*hs]]); // front parts left
+	var infWallPart04 = getWall(p,[[2.14,0.42,h1+h2+2*hs],[2.14,1.05,h1+h2+2*hs],[2.14,1.05,h1+h2+3.5*hs],[2.14,0.42,h1+h2+3.5*hs]]);
+	var infWallPart05 = getWall(p,[[0.42,0.42,h1+h2+7.5*hs],[0.42,3.04,h1+h2+7.5*hs],[0.42,3.04,h1+h2+8.5*hs],[0.42,0.42,h1+h2+8.5*hs]]); // back parts
+	var infWallPart06 = getWall(p,[[0.42,0.42,h1+h2+2*hs],[0.42,3.04,h1+h2+2*hs],[0.42,3.04,h1+h2+3.5*hs],[0.42,0.42,h1+h2+3.5*hs]]);
+
+	var infWallPart07 = getWall(p,[[0.42,0.42,h1+h2+3.5*hs],[0.692,0.42,h1+h2+3.5*hs],[0.692,0.42,h1+h2+7.5*hs],[0.42,0.42,h1+h2+7.5*hs]]); // windows borders lateral
+	var infWallPart08 = getWall(p,[[0.84,0.42,h1+h2+3.5*hs],[1.22,0.42,h1+h2+3.5*hs],[1.22,0.42,h1+h2+7.5*hs],[0.84,0.42,h1+h2+7.5*hs]]); 
+	var infWallPart09 = getWall(p,[[1.368,0.42,h1+h2+3.5*hs],[1.822,0.42,h1+h2+3.5*hs],[1.822,0.42,h1+h2+7.5*hs],[1.368,0.42,h1+h2+7.5*hs]]); 
+	var infWallPart10 = getWall(p,[[1.97,0.42,h1+h2+3.5*hs],[2.14,0.42,h1+h2+3.5*hs],[2.14,0.42,h1+h2+7.5*hs],[1.97,0.42,h1+h2+7.5*hs]]); 
+
+	var infWallPart11 = getWall(p,[[2.14,0.42,h1+h2+3.5*hs],[2.14,0.67,h1+h2+3.5*hs],[2.14,0.67,h1+h2+7.5*hs],[2.14,0.42,h1+h2+7.5*hs]]); // windows borders front
+	var infWallPart12 = getWall(p,[[2.14,0.818,h1+h2+3.5*hs],[2.14,1.05,h1+h2+3.5*hs],[2.14,1.05,h1+h2+7.5*hs],[2.14,0.818,h1+h2+7.5*hs]]);
+
+	var infWallPart13 = getWall(p,[[0.42,0.42,h1+h2+3.5*hs],[0.42,0.7,h1+h2+3.5*hs],[0.42,0.7,h1+h2+7.5*hs],[0.42,0.42,h1+h2+7.5*hs]]); // windows borders back
+	var infWallPart14 = getWall(p,[[0.42,0.848,h1+h2+3.5*hs],[0.42,1.168,h1+h2+3.5*hs],[0.42,1.168,h1+h2+7.5*hs],[0.42,0.848,h1+h2+7.5*hs]]);
+	var infWallPart15 = getWall(p,[[0.42,1.316,h1+h2+3.5*hs],[0.42,1.436,h1+h2+3.5*hs],[0.42,1.436,h1+h2+7.5*hs],[0.42,1.316,h1+h2+7.5*hs]]);
+	var infWallPart16 = getWall(p,[[0.42,1.536,h1+h2+3.5*hs],[0.42,1.73,h1+h2+3.5*hs],[0.42,1.73,h1+h2+7.5*hs],[0.42,1.536,h1+h2+7.5*hs]]);
+
+
+	var frontWallPart = getWall(p,[[2.14,0.42,h1+h2+10*hs],[2.14,1.09,h1+h2+10*hs],[2.14,1.09,hb+10*hs],[2.14,0.42,hb+10*hs]]); // front wall left
+	var backWall = getWall(p,[[0.42,0.42,h1+h2+10*hs],[0.42,3.04,h1+h2+10*hs],[0.42,3.04,hb+10*hs],[0.42,0.42,hb+10*hs]]); // back wall
+	var lateralWall = getWall(p,[[0.42,0.42,h1+h2+10*hs],[2.14,0.42,h1+h2+10*hs],[2.14,0.42,hb+10*hs],[0.42,0.42,hb+10*hs]]); // lateral left wall
+
+
+	// lodge walls
+	var lodgeLeftWall01 = getWall(p,[[2.14,1.09,h1+h2+10*hs],[1.97,1.09,h1+h2+10*hs],[1.97,1.09,h1+h2+10*hs+hc],[2.14,1.09,h1+h2+10*hs+hc]]);
+	var lodgeLeftWall02 = getWall(p,[[1.97,1.09,h1+h2+10*hs+0.23],[1.87,1.09,h1+h2+10*hs+0.23],[1.87,1.09,h1+h2+10*hs+hc],[1.97,1.09,h1+h2+10*hs+hc]]);
+	var lodgeLeftWall03 = getWall(p,[[1.87,1.09,h1+h2+10*hs],[1.7,1.09,h1+h2+10*hs],[1.7,1.09,h1+h2+10*hs+hc],[1.87,1.09,h1+h2+10*hs+hc]]);
+	var lodgeWallPart01 = getWall(p,[[1.7,1.09,h1+h2+10*hs],[1.7,1.15,h1+h2+10*hs],[1.7,1.15,h1+h2+10*hs+hc],[1.7,1.09,h1+h2+10*hs+hc]]);
+	var lodgeWallPart02 = getWall(p,[[1.7,1.15,h1+h2+10*hs],[1.7,1.25,h1+h2+10*hs],[1.7,1.25,h1+h2+10*hs+0.23],[1.7,1.15,h1+h2+10*hs+0.23]]);
+	var lodgeWallPart03 = getWall(p,[[1.7,1.15,h1+h2+10*hs+2/3*hc],[1.7,1.25,h1+h2+10*hs+2/3*hc],[1.7,1.25,h1+h2+10*hs+hc],[1.7,1.15,h1+h2+10*hs+hc]]);
+	var lodgeWallPart04 = getWall(p,[[1.7,1.25,h1+h2+10*hs],[1.7,1.646,h1+h2+10*hs],[1.7,1.646,h1+h2+10*hs+hc],[1.7,1.25,h1+h2+10*hs+hc]]);
+	var lodgeWallPart05 = getWall(p,[[1.7,1.646,h1+h2+10*hs+2/3*hc],[1.7,1.814,h1+h2+10*hs+2/3*hc],[1.7,1.814,h1+h2+10*hs+hc],[1.7,1.646,h1+h2+10*hs+hc]]);
+	var lodgeWallPart06 = getWall(p,[[1.7,1.814,h1+h2+10*hs],[1.7,2.210,h1+h2+10*hs],[1.7,2.210,h1+h2+10*hs+hc],[1.7,1.814,h1+h2+10*hs+hc]]);
+	var lodgeWallPart07 = getWall(p,[[1.7,2.210,h1+h2+10*hs],[1.7,2.310,h1+h2+10*hs],[1.7,2.310,h1+h2+10*hs+0.23],[1.7,2.210,h1+h2+10*hs+0.23]]);
+	var lodgeWallPart08 = getWall(p,[[1.7,2.210,h1+h2+10*hs+2/3*hc],[1.7,2.310,h1+h2+10*hs+2/3*hc],[1.7,2.310,h1+h2+10*hs+hc],[1.7,2.210,h1+h2+10*hs+hc]]);
+	var lodgeWallPart09 = getWall(p,[[1.7,2.310,h1+h2+10*hs],[1.7,2.370,h1+h2+10*hs],[1.7,2.370,h1+h2+10*hs+hc],[1.7,2.310,h1+h2+10*hs+hc]]);
+
+
+	// struct wall
+	var walls = STRUCT([infWallPart01, T([1])([3.46*p])(S([1])([-1])(infWallPart01)),
+						infWallPart02, T([1])([3.46*p])(S([1])([-1])(infWallPart02)),
+						infWallPart03, T([1])([3.46*p])(S([1])([-1])(infWallPart03)),
+						infWallPart04, T([1])([3.46*p])(S([1])([-1])(infWallPart04)),
+						infWallPart05, infWallPart06,
+						infWallPart07, T([1])([3.46*p])(S([1])([-1])(infWallPart07)),
+						infWallPart08, T([1])([3.46*p])(S([1])([-1])(infWallPart08)),
+						infWallPart09, T([1])([3.46*p])(S([1])([-1])(infWallPart09)),
+						infWallPart10, T([1])([3.46*p])(S([1])([-1])(infWallPart10)),
+						infWallPart11, T([1])([3.46*p])(S([1])([-1])(infWallPart11)),
+						infWallPart12, T([1])([3.46*p])(S([1])([-1])(infWallPart12)),
+
+						infWallPart13, T([1])([3.46*p])(S([1])([-1])(infWallPart13)),
+						infWallPart14, T([1])([3.46*p])(S([1])([-1])(infWallPart14)),
+						infWallPart15, T([1])([3.46*p])(S([1])([-1])(infWallPart15)),
+						infWallPart16, T([1])([3.46*p])(S([1])([-1])(infWallPart16)),
+						frontWallPart, T([1])([3.46*p])(S([1])([-1])(frontWallPart)),
+
+						lodgeLeftWall01, T([1])([3.46*p])(S([1])([-1])(lodgeLeftWall01)),
+						lodgeLeftWall02, T([1])([3.46*p])(S([1])([-1])(lodgeLeftWall02)),
+						lodgeLeftWall03, T([1])([3.46*p])(S([1])([-1])(lodgeLeftWall03)),
+						lodgeWallPart01,
+						lodgeWallPart02,
+						lodgeWallPart03,
+						lodgeWallPart04,
+						lodgeWallPart05,
+						lodgeWallPart06,
+						lodgeWallPart07,
+						lodgeWallPart08, lodgeWallPart09,
+
+						backWall,
+						lateralWall, T([1])([3.46*p])(S([1])([-1])(lateralWall)),
+						]);
+
 	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.05*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
 	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.293*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
 	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.536*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
@@ -612,9 +687,8 @@ function buildingWall(){
 	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.057*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
 	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.3*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
 
-	return COLOR(colors.hue)(STRUCT([floor,lodgeFloor,basement,topProjection]));
+	return COLOR(colors.hue)(STRUCT([floor,lodgeFloor,basement,topProjection,walls]));
 
-	// confini building wall 	[[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2+10*hs-2*hs)*p,2*hs*p]]);
 
 
 }
@@ -623,8 +697,10 @@ function buildingWall(){
 
 
 
+// confini building wall 	[[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2+10*hs-2*hs)*p,2*hs*p]]);
 
 
+// 	DRAW(COLOR([1,0,0,0.5])(BOUNDARY(SIMPLEX_GRID([[-0.42*p,1.72*p],[-0.42*p,2.62*p],[-(h1+h2)*p,(hb)*p]])))); // building wall
 
 
 
