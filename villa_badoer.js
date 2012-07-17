@@ -21,6 +21,7 @@ function Drawer(){
 	this.baseComponents = undefined;
 	this.buildingWall = undefined;
 	this.ledge = undefined;
+	this.tympanum = undefined;
 }
 
 
@@ -84,6 +85,19 @@ Drawer.prototype.drawLedge = function(){
     return DRAW(this.ledge);
 }
 
+
+Drawer.prototype.addTympanum = function(tympanum){
+    this.tympanum = tympanum;
+}
+
+Drawer.prototype.drawTympanum = function(){
+    if (this.tympanum === undefined){
+            alert("Create the model \"tympanum\" before draw it!");
+            return;
+    }
+    return DRAW(this.tympanum);
+}
+
 // draw all components
 Drawer.prototype.drawAll = function(){
     return DRAW(STRUCT([this.mainStructure,this.foundation])); // TODO
@@ -109,8 +123,9 @@ function Colors(){};
 
 var colors = new Colors();
 
-colors.foundation = [200/255,230/255,240/255,1];
-colors.hue = [1/255,230/255,240/255,1];
+colors.foundation = [200/255,230/255,240/255];
+colors.hue = [1/255,230/255,240/255];
+colors.baseFrontLedge = [1/255,200/255,240/255];
 
 
 /*
@@ -804,14 +819,14 @@ function ledge(){
 						]);
 
 	var frontLedge = STRUCT([
-				MAP(BEZIER(S1)([frontBaseLedgeLeft,frontBaseLedgeRight]))(domains.railTopDomain),
-				MAP(BEZIER(S1)([frontBaseLedgeLeft,frontBaseLedgeLeftBack]))(domains.railTopDomain),
-				MAP(BEZIER(S1)([frontBaseLedgeRight,frontBaseLedgeRightBack]))(domains.railTopDomain),
-				MAP(BEZIER(S1)([frontTopLedgeLeft,frontTopLedgeRight]))(domains.railTopDomain),
-				MAP(BEZIER(S1)([frontTopLedgeLeft,frontTopLedgeLeftBack]))(domains.railTopDomain),
-				MAP(BEZIER(S1)([frontTopLedgeRight,frontTopLedgeRightBack]))(domains.railTopDomain),
-				TRIANGLE_DOMAIN(1,[[0,0.012*p,0],[0,(1.36-0.012)*p,0],[-prof*p,0.012*p,0]]),
-				TRIANGLE_DOMAIN(1,[[0,(1.36-0.012)*p,0],[-prof*p,0.012*p,0],[-prof*p,(1.36-0.012)*p,0]]),
+				COLOR(colors.baseFrontLedge)(MAP(BEZIER(S1)([frontBaseLedgeLeft,frontBaseLedgeRight]))(domains.railTopDomain)),
+				COLOR(colors.baseFrontLedge)(MAP(BEZIER(S1)([frontBaseLedgeLeft,frontBaseLedgeLeftBack]))(domains.railTopDomain)),
+				COLOR(colors.baseFrontLedge)(MAP(BEZIER(S1)([frontBaseLedgeRight,frontBaseLedgeRightBack]))(domains.railTopDomain)),
+				COLOR(colors.hue)(MAP(BEZIER(S1)([frontTopLedgeLeft,frontTopLedgeRight]))(domains.railTopDomain)),
+				COLOR(colors.hue)(MAP(BEZIER(S1)([frontTopLedgeLeft,frontTopLedgeLeftBack]))(domains.railTopDomain)),
+				COLOR(colors.hue)(MAP(BEZIER(S1)([frontTopLedgeRight,frontTopLedgeRightBack]))(domains.railTopDomain)),
+				COLOR(colors.hue)(TRIANGLE_DOMAIN(1,[[0,0.012*p,0],[0,(1.36-0.012)*p,0],[-prof*p,0.012*p,0]])),
+				COLOR(colors.hue)(TRIANGLE_DOMAIN(1,[[0,(1.36-0.012)*p,0],[-prof*p,0.012*p,0],[-prof*p,(1.36-0.012)*p,0]])),
 			]);
 
 	frontLedge = T([0,1,2])([2.19*p,1.05*p,(hb+2*hl+0.0065)*p])(frontLedge);
@@ -845,7 +860,7 @@ function ledge(){
 						[0.060*p,0,0.084*p], //33
 						]);
 
-	var len = 2.74;
+	var len = 2.75; //50
 
 	var ledgeProfileRigth = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
 									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
@@ -872,7 +887,7 @@ function ledge(){
 	
 	var ledgeLong = MAP(BEZIER(S1)([ledgeProfileLeft,ledgeProfileRigth]))(domains.ledgeDomain);
 
-	len = 1.83;
+	len = 1.85;
 
 	var ledgeProfileRigth = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
 									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
@@ -899,21 +914,258 @@ function ledge(){
 
 	var ledgeShort = MAP(BEZIER(S1)([ledgeProfileLeft,ledgeProfileRigth]))(domains.ledgeDomain);
 
-	return COLOR(colors.hue)(STRUCT([
-				frontLedge,
-				T([0,1,2])([2.145*p,0.355*p,(hb+10*hs+hl+0.011)*p])(ledgeLong),
-			])
-		);
 
+	return STRUCT([
+				frontLedge,
+				COLOR(colors.hue)(T([0,1,2])([2.145*p,0.355*p,(hb+10*hs+hl+0.0105)*p])(ledgeLong)),
+				COLOR(colors.hue)(T([0,1,2])([0.355*p,0.415*p,(hb+10*hs+hl+0.0105)*p])(R([0,1])(-PI/2)(ledgeShort))),
+				COLOR(colors.hue)(T([0,1,2])([2.205*p,3.045*p,(hb+10*hs+hl+0.0105)*p])(R([0,1])(PI/2)(ledgeShort))),
+				COLOR(colors.hue)(T([0,1,2])([0.415*p,0.355*p,(hb+10*hs+hl+0.0105)*p])(S([0])([-1])(ledgeLong))),
+			]);
+	//TODO sistemare color
 
 }
 
 
 
-
-
-
 function tympanum(){
+
+	// Get proportion
+	var p = scale.proportion || 1;
+
+	// height foundation steps
+	var h1 = 0.16;
+	var h2 = 0.08885;
+	var hs = 0.01777;
+
+	// height building
+	var hb = 0.795+h1+h2;
+	var hc = 0.745;
+
+	// height ledge hl*2
+	var hl = (hb-hc-10*hs)/2;
+	var prof = 0.08;
+
+	var len = 1.48;
+	var prof = 0.1
+
+	var bottomProfileLeft = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,27,27])(
+						[[0,0.060*p,0],
+						[0.001*p,0.059*p,0],[0.001*p,0.059*p,0],
+						[0.001*p,0.059*p,0.003*p],
+						[0.005*p,0.055*p,0.005*p],
+						[0.005*p,0.055*p,0.008*p],[0.005*p,0.055*p,0.008*p],
+						[0.006*p,0.054*p,0.008*p],[0.006*p,0.054*p,0.008*p],
+						[0.006*p,0.054*p,0.015*p],
+						[0.014*p,0.046*p,0.018*p],
+						[0.014*p,0.046*p,0.023*p],[0.014*p,0.046*p,0.023*p],
+						[0.015*p,0.045*p,0.023*p],[0.015*p,0.045*p,0.023*p],
+						[0.015*p,0.045*p,0.046*p],[0.015*p,0.045*p,0.046*p],
+						[0.019*p,0.041*p,0.046*p],[0.019*p,0.041*p,0.046*p],
+						[0.019*p,0.041*p,0.050*p],[0.019*p,0.041*p,0.050*p], // a
+						[0.045*p,0.015*p,0.050*p],[0.045*p,0.015*p,0.050*p],
+						[0.045*p,0.015*p,0.058*p],[0.045*p,0.015*p,0.058*p], //
+						[0.049*p,0.011*p,0.058*p],[0.049*p,0.011*p,0.058*p],
+						[0.049*p,0.011*p,0.062*p],[0.049*p,0.011*p,0.062*p],
+						]);
+
+	var bottomProfileRight = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,27,27])(
+						[[0,(len-0.060)*p,0],
+						[0.001*p,(len-0.059)*p,0],[0.001*p,(len-0.059)*p,0],
+						[0.001*p,(len-0.059)*p,0.003*p],
+						[0.005*p,(len-0.055)*p,0.005*p],
+						[0.005*p,(len-0.055)*p,0.008*p],[0.005*p,(len-0.055)*p,0.008*p],
+						[0.006*p,(len-0.054)*p,0.008*p],[0.006*p,(len-0.054)*p,0.008*p],
+						[0.006*p,(len-0.054)*p,0.015*p],
+						[0.014*p,(len-0.046)*p,0.018*p],
+						[0.014*p,(len-0.046)*p,0.023*p],[0.014*p,(len-0.046)*p,0.023*p],
+						[0.015*p,(len-0.045)*p,0.023*p],[0.015*p,(len-0.045)*p,0.023*p],
+						[0.015*p,(len-0.045)*p,0.046*p],[0.015*p,(len-0.045)*p,0.046*p],
+						[0.019*p,(len-0.041)*p,0.046*p],[0.019*p,(len-0.041)*p,0.046*p],
+						[0.019*p,(len-0.041)*p,0.050*p],[0.019*p,(len-0.041)*p,0.050*p], // a
+						[0.045*p,(len-0.015)*p,0.050*p],[0.045*p,(len-0.015)*p,0.050*p],
+						[0.045*p,(len-0.015)*p,0.058*p],[0.045*p,(len-0.015)*p,0.058*p], //
+						[0.049*p,(len-0.011)*p,0.058*p],[0.049*p,(len-0.011)*p,0.058*p],
+						[0.049*p,(len-0.011)*p,0.062*p],[0.049*p,(len-0.011)*p,0.062*p],
+						]);
+
+	var bottomProfileLeftBack = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,27,27])(
+						[[-prof*p,0.060*p,0],
+						[(0.001-prof)*p,0.059*p,0],[(0.001-prof)*p,0.059*p,0],
+						[(0.001-prof)*p,0.059*p,0.003*p],
+						[(0.005-prof)*p,0.055*p,0.005*p],
+						[(0.005-prof)*p,0.055*p,0.008*p],[(0.005-prof)*p,0.055*p,0.008*p],
+						[(0.006-prof)*p,0.054*p,0.008*p],[(0.006-prof)*p,0.054*p,0.008*p],
+						[(0.006-prof)*p,0.054*p,0.015*p],
+						[(0.014-prof)*p,0.046*p,0.018*p],
+						[(0.014-prof)*p,0.046*p,0.023*p],[(0.014-prof)*p,0.046*p,0.023*p],
+						[(0.015-prof)*p,0.045*p,0.023*p],[(0.015-prof)*p,0.045*p,0.023*p],
+						[(0.015-prof)*p,0.045*p,0.046*p],[(0.015-prof)*p,0.045*p,0.046*p],
+						[(0.019-prof)*p,0.041*p,0.046*p],[(0.019-prof)*p,0.041*p,0.046*p],
+						[(0.019-prof)*p,0.041*p,0.050*p],[(0.019-prof)*p,0.041*p,0.050*p], // a
+						[(0.045-prof)*p,0.015*p,0.050*p],[(0.045-prof)*p,0.015*p,0.050*p],
+						[(0.045-prof)*p,0.015*p,0.058*p],[(0.045-prof)*p,0.015*p,0.058*p], //
+						[(0.049-prof)*p,0.011*p,0.058*p],[(0.049-prof)*p,0.011*p,0.058*p],
+						[(0.049-prof)*p,0.011*p,0.062*p],[(0.049-prof)*p,0.011*p,0.062*p],
+						]);
+
+	var bottomProfileRightBack = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,27,27])(
+						[[-prof*p,(len-0.060)*p,0],
+						[(0.001-prof)*p,(len-0.059)*p,0],[(0.001-prof)*p,(len-0.059)*p,0],
+						[(0.001-prof)*p,(len-0.059)*p,0.003*p],
+						[(0.005-prof)*p,(len-0.055)*p,0.005*p],
+						[(0.005-prof)*p,(len-0.055)*p,0.008*p],[(0.005-prof)*p,(len-0.055)*p,0.008*p],
+						[(0.006-prof)*p,(len-0.054)*p,0.008*p],[(0.006-prof)*p,(len-0.054)*p,0.008*p],
+						[(0.006-prof)*p,(len-0.054)*p,0.015*p],
+						[(0.014-prof)*p,(len-0.046)*p,0.018*p],
+						[(0.014-prof)*p,(len-0.046)*p,0.023*p],[(0.014-prof)*p,(len-0.046)*p,0.023*p],
+						[(0.015-prof)*p,(len-0.045)*p,0.023*p],[(0.015-prof)*p,(len-0.045)*p,0.023*p],
+						[(0.015-prof)*p,(len-0.045)*p,0.046*p],[(0.015-prof)*p,(len-0.045)*p,0.046*p],
+						[(0.019-prof)*p,(len-0.041)*p,0.046*p],[(0.019-prof)*p,(len-0.041)*p,0.046*p],
+						[(0.019-prof)*p,(len-0.041)*p,0.050*p],[(0.019-prof)*p,(len-0.041)*p,0.050*p], // a
+						[(0.045-prof)*p,(len-0.015)*p,0.050*p],[(0.045-prof)*p,(len-0.015)*p,0.050*p],
+						[(0.045-prof)*p,(len-0.015)*p,0.058*p],[(0.045-prof)*p,(len-0.015)*p,0.058*p], //
+						[(0.049-prof)*p,(len-0.011)*p,0.058*p],[(0.049-prof)*p,(len-0.011)*p,0.058*p],
+						[(0.049-prof)*p,(len-0.011)*p,0.062*p],[(0.049-prof)*p,(len-0.011)*p,0.062*p],
+						]);
+
+	var bottom = STRUCT([
+					MAP(BEZIER(S1)([bottomProfileLeft,bottomProfileRight]))(domains.ledgeDomain),
+					MAP(BEZIER(S1)([bottomProfileLeft,bottomProfileLeftBack]))(domains.ledgeDomain),
+					MAP(BEZIER(S1)([bottomProfileRight,bottomProfileRightBack]))(domains.ledgeDomain)
+				]);
+
+	bottom = T([0,1,2])([2.19*p,0.99*p,(hb+4*hl+0.0065)*p])(bottom);
+
+
+	// triangle lodge
+
+	var topProfileLeft = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
+						[[0,0.060*p,0],
+						[0.001*p,0.059*p,0],[0.001*p,0.059*p,0],
+						[0.001*p,0.059*p,0.003*p],
+						[0.005*p,0.055*p,0.005*p],
+						[0.005*p,0.055*p,0.008*p],[0.005*p,0.055*p,0.008*p],
+						[0.006*p,0.054*p,0.008*p],[0.006*p,0.054*p,0.008*p],
+						[0.006*p,0.054*p,0.015*p],
+						[0.014*p,0.046*p,0.018*p],
+						[0.014*p,0.046*p,0.023*p],[0.014*p,0.046*p,0.023*p],
+						[0.015*p,0.045*p,0.023*p],[0.015*p,0.045*p,0.023*p],
+						[0.015*p,0.045*p,0.046*p],[0.015*p,0.045*p,0.046*p],
+						[0.019*p,0.041*p,0.046*p],[0.019*p,0.041*p,0.046*p],
+						[0.019*p,0.041*p,0.050*p],[0.019*p,0.041*p,0.050*p], // a
+						[0.045*p,0.015*p,0.050*p],[0.045*p,0.015*p,0.050*p],
+						[0.045*p,0.015*p,0.062*p],[0.045*p,0.015*p,0.062*p],
+						[0.053*p,0.007*p,0.062*p],
+						[0.053*p,0.007*p,0.082*p],
+						[0.060*p,0,0.082*p],[0.060*p,0,0.082*p], 
+						[0.060*p,0,0.084*p], //33
+						]);
+
+	len = 0.87;
+
+	var topProfileRigth = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
+						[[0,(len-0.060)*p,0],
+						[0.001*p,(len-0.059)*p,0],[0.001*p,(len-0.059)*p,0],
+						[0.001*p,(len-0.059)*p,0.003*p],
+						[0.005*p,(len-0.055)*p,0.005*p],
+						[0.005*p,(len-0.055)*p,0.008*p],[0.005*p,(len-0.055)*p,0.008*p],
+						[0.006*p,(len-0.054)*p,0.008*p],[0.006*p,(len-0.054)*p,0.008*p],
+						[0.006*p,(len-0.054)*p,0.015*p],
+						[0.014*p,(len-0.046)*p,0.018*p],
+						[0.014*p,(len-0.046)*p,0.023*p],[0.014*p,(len-0.046)*p,0.023*p],
+						[0.015*p,(len-0.045)*p,0.023*p],[0.015*p,(len-0.045)*p,0.023*p],
+						[0.015*p,(len-0.045)*p,0.046*p],[0.015*p,(len-0.045)*p,0.046*p],
+						[0.019*p,(len-0.041)*p,0.046*p],[0.019*p,(len-0.041)*p,0.046*p],
+						[0.019*p,(len-0.041)*p,0.050*p],[0.019*p,(len-0.041)*p,0.050*p], // a
+						[0.045*p,(len-0.015)*p,0.050*p],[0.045*p,(len-0.015)*p,0.050*p],
+						[0.045*p,(len-0.015)*p,0.062*p],[0.045*p,(len-0.015)*p,0.062*p],
+						[0.053*p,(len-0.007)*p,0.062*p],
+						[0.053*p,(len-0.007)*p,0.082*p],
+						[0.060*p,len*p,0.082*p],[0.060*p,len*p,0.082*p], 
+						[0.060*p,len*p,0.084*p], //33
+						]);
+
+	var topProfileLeftBack = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
+						[[-prof*p,0.060*p,0],
+						[(0.001-prof)*p,0.059*p,0],[(0.001-prof)*p,0.059*p,0],
+						[(0.001-prof)*p,0.059*p,0.003*p],
+						[(0.005-prof)*p,0.055*p,0.005*p],
+						[(0.005-prof)*p,0.055*p,0.008*p],[(0.005-prof)*p,0.055*p,0.008*p],
+						[(0.006-prof)*p,0.054*p,0.008*p],[(0.006-prof)*p,0.054*p,0.008*p],
+						[(0.006-prof)*p,0.054*p,0.015*p],
+						[(0.014-prof)*p,0.046*p,0.018*p],
+						[(0.014-prof)*p,0.046*p,0.023*p],[(0.014-prof)*p,0.046*p,0.023*p],
+						[(0.015-prof)*p,0.045*p,0.023*p],[(0.015-prof)*p,0.045*p,0.023*p],
+						[(0.015-prof)*p,0.045*p,0.046*p],[(0.015-prof)*p,0.045*p,0.046*p],
+						[(0.019-prof)*p,0.041*p,0.046*p],[(0.019-prof)*p,0.041*p,0.046*p],
+						[(0.019-prof)*p,0.041*p,0.050*p],[(0.019-prof)*p,0.041*p,0.050*p], // a
+						[(0.045-prof)*p,0.015*p,0.050*p],[(0.045-prof)*p,0.015*p,0.050*p],
+						[(0.045-prof)*p,0.015*p,0.062*p],[(0.045-prof)*p,0.015*p,0.062*p],
+						[(0.053-prof)*p,0.007*p,0.062*p],
+						[(0.053-prof)*p,0.007*p,0.082*p],
+						[(0.060-prof)*p,0,0.082*p],[(0.060-prof)*p,0,0.082*p], 
+						[(0.060-prof)*p,0,0.084*p], //33
+						]);
+
+	var topProfileRigthBack = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
+						[[-prof*p,(len-0.060)*p,0],
+						[(0.001-prof)*p,(len-0.059)*p,0],[(0.001-prof)*p,(len-0.059)*p,0],
+						[(0.001-prof)*p,(len-0.059)*p,0.003*p],
+						[(0.005-prof)*p,(len-0.055)*p,0.005*p],
+						[(0.005-prof)*p,(len-0.055)*p,0.008*p],[(0.005-prof)*p,(len-0.055)*p,0.008*p],
+						[(0.006-prof)*p,(len-0.054)*p,0.008*p],[(0.006-prof)*p,(len-0.054)*p,0.008*p],
+						[(0.006-prof)*p,(len-0.054)*p,0.015*p],
+						[(0.014-prof)*p,(len-0.046)*p,0.018*p],
+						[(0.014-prof)*p,(len-0.046)*p,0.023*p],[(0.014-prof)*p,(len-0.046)*p,0.023*p],
+						[(0.015-prof)*p,(len-0.045)*p,0.023*p],[(0.015-prof)*p,(len-0.045)*p,0.023*p],
+						[(0.015-prof)*p,(len-0.045)*p,0.046*p],[(0.015-prof)*p,(len-0.045)*p,0.046*p],
+						[(0.019-prof)*p,(len-0.041)*p,0.046*p],[(0.019-prof)*p,(len-0.041)*p,0.046*p],
+						[(0.019-prof)*p,(len-0.041)*p,0.050*p],[(0.019-prof)*p,(len-0.041)*p,0.050*p], // a
+						[(0.045-prof)*p,(len-0.015)*p,0.050*p],[(0.045-prof)*p,(len-0.015)*p,0.050*p],
+						[(0.045-prof)*p,(len-0.015)*p,0.062*p],[(0.045-prof)*p,(len-0.015)*p,0.062*p],
+						[(0.053-prof)*p,(len-0.007)*p,0.062*p],
+						[(0.053-prof)*p,(len-0.007)*p,0.082*p],
+						[(0.060-prof)*p,len*p,0.082*p],[(0.060-prof)*p,len*p,0.082*p], 
+						[(0.060-prof)*p,len*p,0.084*p], //33
+						]);
+
+	var top = STRUCT([
+				MAP(BEZIER(S1)([topProfileLeft,topProfileRigth]))(domains.ledgeDomain),
+				MAP(BEZIER(S1)([topProfileLeft,topProfileLeftBack]))(domains.ledgeDomain),
+				MAP(BEZIER(S1)([topProfileRigth,topProfileRigthBack]))(domains.ledgeDomain)
+			]);
+
+	top = R([1,2])(PI/5.5)(top);
+	top = T([0,1,2])([2.19*p,0.99*p,(hb+4*hl+0.0065+0.035)*p])(top);
+	
+	return COLOR(colors.hue)(
+			STRUCT([
+				bottom,
+				top,
+				T([1])([3.3*p])(S([1])([-1])(top)),
+				])
+		);
+
+	/*var frontLedge = STRUCT([
+			COLOR(colors.baseFrontLedge)(MAP(BEZIER(S1)([frontBaseLedgeLeft,frontBaseLedgeRight]))(domains.railTopDomain)),
+			COLOR(colors.baseFrontLedge)(MAP(BEZIER(S1)([frontBaseLedgeLeft,frontBaseLedgeLeftBack]))(domains.railTopDomain)),
+			COLOR(colors.baseFrontLedge)(MAP(BEZIER(S1)([frontBaseLedgeRight,frontBaseLedgeRightBack]))(domains.railTopDomain)),
+			COLOR(colors.hue)(MAP(BEZIER(S1)([frontTopLedgeLeft,frontTopLedgeRight]))(domains.railTopDomain)),
+			COLOR(colors.hue)(MAP(BEZIER(S1)([frontTopLedgeLeft,frontTopLedgeLeftBack]))(domains.railTopDomain)),
+			COLOR(colors.hue)(MAP(BEZIER(S1)([frontTopLedgeRight,frontTopLedgeRightBack]))(domains.railTopDomain)),
+			COLOR(colors.hue)(TRIANGLE_DOMAIN(1,[[0,0.012*p,0],[0,(1.36-0.012)*p,0],[-prof*p,0.012*p,0]])),
+			COLOR(colors.hue)(TRIANGLE_DOMAIN(1,[[0,(1.36-0.012)*p,0],[-prof*p,0.012*p,0],[-prof*p,(1.36-0.012)*p,0]])),
+		]);*/
+
 
 }
 
@@ -949,6 +1201,9 @@ function drawVilla(){
 
 	drawer.addLedge(ledge());
 	drawer.drawLedge();
+
+	drawer.addTympanum(tympanum());
+	drawer.drawTympanum();
 	//drawer.all();
 }
 
