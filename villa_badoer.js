@@ -887,6 +887,66 @@ function ledge(){
 	
 	var ledgeLong = MAP(BEZIER(S1)([ledgeProfileLeft,ledgeProfileRigth]))(domains.ledgeDomain);
 
+	// the left part of the frontal ledge
+
+	len = 0.64;
+
+	var ledgeFrontProfileLeft = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
+						[[0,(len+0.060)*p,0],
+						[0.001*p,(len+0.059)*p,0],[0.001*p,(len+0.059)*p,0],
+						[0.001*p,(len+0.059)*p,0.003*p],
+						[0.005*p,(len+0.055)*p,0.005*p],
+						[0.005*p,(len+0.055)*p,0.008*p],[0.005*p,(len+0.055)*p,0.008*p],
+						[0.006*p,(len+0.054)*p,0.008*p],[0.006*p,(len+0.054)*p,0.008*p],
+						[0.006*p,(len+0.054)*p,0.015*p],
+						[0.014*p,(len+0.046)*p,0.018*p],
+						[0.014*p,(len+0.046)*p,0.023*p],[0.014*p,(len+0.046)*p,0.023*p],
+						[0.015*p,(len+0.045)*p,0.023*p],[0.015*p,(len+0.045)*p,0.023*p],
+						[0.015*p,(len+0.045)*p,0.046*p],[0.015*p,(len+0.045)*p,0.046*p],
+						[0.019*p,(len+0.041)*p,0.046*p],[0.019*p,(len+0.041)*p,0.046*p],
+						[0.019*p,(len+0.041)*p,0.050*p],[0.019*p,(len+0.041)*p,0.050*p], // a
+						[0.045*p,(len+0.015)*p,0.050*p],[0.045*p,(len+0.015)*p,0.050*p],
+						[0.045*p,(len+0.015)*p,0.062*p],[0.045*p,(len+0.015)*p,0.062*p],
+						[0.053*p,(len+0.007)*p,0.062*p],
+						[0.053*p,(len+0.007)*p,0.082*p],
+						[0.060*p,len*p,0.082*p],[0.060*p,len*p,0.082*p], 
+						[0.060*p,len*p,0.084*p], //33
+						]);
+
+	var ledgeFrontLeftShort = MAP(BEZIER(S1)([ledgeProfileLeft,ledgeFrontProfileLeft]))(domains.ledgeDomain);
+
+	// the right part of the frontal ledge
+
+	len = 2.75-0.64;
+
+	var ledgeFrontProfileRight = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
+									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
+						[[0,(len-0.060)*p,0],
+						[0.001*p,(len-0.059)*p,0],[0.001*p,(len-0.059)*p,0],
+						[0.001*p,(len-0.059)*p,0.003*p],
+						[0.005*p,(len-0.055)*p,0.005*p],
+						[0.005*p,(len-0.055)*p,0.008*p],[0.005*p,(len-0.055)*p,0.008*p],
+						[0.006*p,(len-0.054)*p,0.008*p],[0.006*p,(len-0.054)*p,0.008*p],
+						[0.006*p,(len-0.054)*p,0.015*p],
+						[0.014*p,(len-0.046)*p,0.018*p],
+						[0.014*p,(len-0.046)*p,0.023*p],[0.014*p,(len-0.046)*p,0.023*p],
+						[0.015*p,(len-0.045)*p,0.023*p],[0.015*p,(len-0.045)*p,0.023*p],
+						[0.015*p,(len-0.045)*p,0.046*p],[0.015*p,(len-0.045)*p,0.046*p],
+						[0.019*p,(len-0.041)*p,0.046*p],[0.019*p,(len-0.041)*p,0.046*p],
+						[0.019*p,(len-0.041)*p,0.050*p],[0.019*p,(len-0.041)*p,0.050*p], // a
+						[0.045*p,(len-0.015)*p,0.050*p],[0.045*p,(len-0.015)*p,0.050*p],
+						[0.045*p,(len-0.015)*p,0.062*p],[0.045*p,(len-0.015)*p,0.062*p],
+						[0.053*p,(len-0.007)*p,0.062*p],
+						[0.053*p,(len-0.007)*p,0.082*p],
+						[0.060*p,len*p,0.082*p],[0.060*p,len*p,0.082*p], 
+						[0.060*p,len*p,0.084*p], //33
+						]);
+
+	var ledgeFrontRightShort = MAP(BEZIER(S1)([ledgeProfileRigth,ledgeFrontProfileRight]))(domains.ledgeDomain);
+
+	// the lateral part of the ledge	
+
 	len = 1.85;
 
 	var ledgeProfileRigth = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
@@ -917,7 +977,8 @@ function ledge(){
 
 	return STRUCT([
 				frontLedge,
-				COLOR(colors.hue)(T([0,1,2])([2.145*p,0.355*p,(hb+10*hs+hl+0.0105)*p])(ledgeLong)),
+				COLOR(colors.hue)(T([0,1,2])([2.145*p,0.355*p,(hb+10*hs+hl+0.0105)*p])(ledgeFrontLeftShort)),
+				COLOR(colors.hue)(T([0,1,2])([2.145*p,0.355*p,(hb+10*hs+hl+0.0105)*p])(ledgeFrontRightShort)),
 				COLOR(colors.hue)(T([0,1,2])([0.355*p,0.415*p,(hb+10*hs+hl+0.0105)*p])(R([0,1])(-PI/2)(ledgeShort))),
 				COLOR(colors.hue)(T([0,1,2])([2.205*p,3.045*p,(hb+10*hs+hl+0.0105)*p])(R([0,1])(PI/2)(ledgeShort))),
 				COLOR(colors.hue)(T([0,1,2])([0.415*p,0.355*p,(hb+10*hs+hl+0.0105)*p])(S([0])([-1])(ledgeLong))),
@@ -1056,9 +1117,9 @@ function tympanum(){
 						[0.014*p,0.046*p,0.018*p],
 						[0.014*p,0.046*p,0.023*p],[0.014*p,0.046*p,0.023*p],
 						[0.015*p,0.045*p,0.023*p],[0.015*p,0.045*p,0.023*p],
-						[0.015*p,0.045*p,0.046*p],[0.015*p,0.045*p,0.046*p],
-						[0.019*p,0.041*p,0.046*p],[0.019*p,0.041*p,0.046*p],
-						[0.019*p,0.041*p,0.050*p],[0.019*p,0.041*p,0.050*p], // a
+						[0.015*p,0.016*p,0.046*p],[0.015*p,0.016*p,0.046*p],
+						[0.019*p,0.016*p,0.046*p],[0.019*p,0.016*p,0.046*p],
+						[0.019*p,0.016*p,0.050*p],[0.019*p,0.016*p,0.050*p], // a
 						[0.045*p,0.015*p,0.050*p],[0.045*p,0.015*p,0.050*p],
 						[0.045*p,0.015*p,0.062*p],[0.045*p,0.015*p,0.062*p],
 						[0.053*p,0.007*p,0.062*p],
@@ -1067,27 +1128,27 @@ function tympanum(){
 						[0.060*p,0,0.084*p], //33
 						]);
 
-	len = 0.87;
+	len = 0.8785; //87
 
 	var topProfileRigth = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
 									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
-						[[0,(len-0.060)*p,0],
-						[0.001*p,(len-0.059)*p,0],[0.001*p,(len-0.059)*p,0],
-						[0.001*p,(len-0.059)*p,0.003*p],
-						[0.005*p,(len-0.055)*p,0.005*p],
-						[0.005*p,(len-0.055)*p,0.008*p],[0.005*p,(len-0.055)*p,0.008*p],
-						[0.006*p,(len-0.054)*p,0.008*p],[0.006*p,(len-0.054)*p,0.008*p],
-						[0.006*p,(len-0.054)*p,0.015*p],
-						[0.014*p,(len-0.046)*p,0.018*p],
-						[0.014*p,(len-0.046)*p,0.023*p],[0.014*p,(len-0.046)*p,0.023*p],
-						[0.015*p,(len-0.045)*p,0.023*p],[0.015*p,(len-0.045)*p,0.023*p],
-						[0.015*p,(len-0.045)*p,0.046*p],[0.015*p,(len-0.045)*p,0.046*p],
-						[0.019*p,(len-0.041)*p,0.046*p],[0.019*p,(len-0.041)*p,0.046*p],
-						[0.019*p,(len-0.041)*p,0.050*p],[0.019*p,(len-0.041)*p,0.050*p], // a
-						[0.045*p,(len-0.015)*p,0.050*p],[0.045*p,(len-0.015)*p,0.050*p],
-						[0.045*p,(len-0.015)*p,0.062*p],[0.045*p,(len-0.015)*p,0.062*p],
-						[0.053*p,(len-0.007)*p,0.062*p],
-						[0.053*p,(len-0.007)*p,0.082*p],
+						[[0,(len)*p,0],
+						[0.001*p,(len)*p,0],[0.001*p,(len)*p,0],
+						[0.001*p,(len)*p,0.003*p],
+						[0.005*p,(len)*p,0.005*p],
+						[0.005*p,(len)*p,0.008*p],[0.005*p,(len)*p,0.008*p],
+						[0.006*p,(len)*p,0.008*p],[0.006*p,(len)*p,0.008*p],
+						[0.006*p,(len)*p,0.015*p],
+						[0.014*p,(len)*p,0.018*p],
+						[0.014*p,(len)*p,0.023*p],[0.014*p,(len)*p,0.023*p],
+						[0.015*p,(len)*p,0.023*p],[0.015*p,(len)*p,0.023*p],
+						[0.015*p,(len)*p,0.046*p],[0.015*p,(len)*p,0.046*p],
+						[0.019*p,(len)*p,0.046*p],[0.019*p,(len)*p,0.046*p],
+						[0.019*p,(len)*p,0.050*p],[0.019*p,(len)*p,0.050*p], // a
+						[0.045*p,(len)*p,0.050*p],[0.045*p,(len)*p,0.050*p],
+						[0.045*p,(len)*p,0.062*p],[0.045*p,(len)*p,0.062*p],
+						[0.053*p,(len)*p,0.062*p],
+						[0.053*p,(len)*p,0.082*p],
 						[0.060*p,len*p,0.082*p],[0.060*p,len*p,0.082*p], 
 						[0.060*p,len*p,0.084*p], //33
 						]);
@@ -1144,28 +1205,38 @@ function tympanum(){
 				MAP(BEZIER(S1)([topProfileRigth,topProfileRigthBack]))(domains.ledgeDomain)
 			]);
 
-	top = R([1,2])(PI/5.5)(top);
-	top = T([0,1,2])([2.19*p,1.02*p,(hb+4*hl+0.0065+0.015)*p])(top);
+	top = R([1,2])(PI/5.9)(top);
+	top = T([0,1,2])([2.19*p,1.016*p,(hb+4*hl+0.0065+0.011)*p])(top);
 	
+	// bottom cover T([0,1,2])([2.19*p,0.99*p,(hb+4*hl+0.0685)*p])(bottom);
+
+	var cover = STRUCT([
+			TRIANGLE_DOMAIN(1,[[2.239*p,1.001*p,(hb+4*hl+0.0685)*p],[2.239*p,2.459*p,(hb+4*hl+0.0685)*p],[2*p,1.001*p,(hb+4*hl+0.0685)*p]]),
+			TRIANGLE_DOMAIN(1,[[2.239*p,2.459*p,(hb+4*hl+0.0685)*p],[2*p,1.001*p,(hb+4*hl+0.0685)*p],[2*p,2.459*p,(hb+4*hl+0.0685)*p]]),
+			TRIANGLE_DOMAIN(1,[[2.190*p,1.001*p,(hb+4*hl+0.0685)*p],[2.190*p,2.459*p,(hb+4*hl+0.0685)*p],[2.190*p,1.73*p,(hb+0.7)*p]]),
+		]);
+
+
+	// guttae
+
+	var gutta = STRUCT([
+			SIMPLEX_GRID([[0.029*p],[0.026*p],[-0.020*p, 0.004*p]]),
+			SIMPLEX_GRID([[0.028*p], [-0.001*p,0.024*p], [0.020*p]])
+		]);
+
+	var guttae = STRUCT([
+			T([0,1,2])([3.19*p,0.99*p,(hb+4*hl+0.0685)*p])(gutta)
+		]);
+
 	return COLOR(colors.hue)(
 			STRUCT([
+				guttae,
 				bottom,
+				cover,
 				top,
-				T([1])([3.3*p])(S([1])([-1])(top)),
+				T([1])([3.460*p])(S([1])([-1])(top)),
 				])
 		);
-
-	/*var frontLedge = STRUCT([
-			COLOR(colors.baseFrontLedge)(MAP(BEZIER(S1)([frontBaseLedgeLeft,frontBaseLedgeRight]))(domains.railTopDomain)),
-			COLOR(colors.baseFrontLedge)(MAP(BEZIER(S1)([frontBaseLedgeLeft,frontBaseLedgeLeftBack]))(domains.railTopDomain)),
-			COLOR(colors.baseFrontLedge)(MAP(BEZIER(S1)([frontBaseLedgeRight,frontBaseLedgeRightBack]))(domains.railTopDomain)),
-			COLOR(colors.hue)(MAP(BEZIER(S1)([frontTopLedgeLeft,frontTopLedgeRight]))(domains.railTopDomain)),
-			COLOR(colors.hue)(MAP(BEZIER(S1)([frontTopLedgeLeft,frontTopLedgeLeftBack]))(domains.railTopDomain)),
-			COLOR(colors.hue)(MAP(BEZIER(S1)([frontTopLedgeRight,frontTopLedgeRightBack]))(domains.railTopDomain)),
-			COLOR(colors.hue)(TRIANGLE_DOMAIN(1,[[0,0.012*p,0],[0,(1.36-0.012)*p,0],[-prof*p,0.012*p,0]])),
-			COLOR(colors.hue)(TRIANGLE_DOMAIN(1,[[0,(1.36-0.012)*p,0],[-prof*p,0.012*p,0],[-prof*p,(1.36-0.012)*p,0]])),
-		]);*/
-
 
 }
 
