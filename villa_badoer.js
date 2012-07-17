@@ -1145,7 +1145,7 @@ function tympanum(){
 			]);
 
 	top = R([1,2])(PI/5.5)(top);
-	top = T([0,1,2])([2.19*p,0.99*p,(hb+4*hl+0.0065+0.035)*p])(top);
+	top = T([0,1,2])([2.19*p,1.02*p,(hb+4*hl+0.0065+0.015)*p])(top);
 	
 	return COLOR(colors.hue)(
 			STRUCT([
