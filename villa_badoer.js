@@ -22,6 +22,7 @@ function Drawer(){
 	this.buildingWall = undefined;
 	this.ledge = undefined;
 	this.tympanum = undefined;
+	this.colums = undefined;
 }
 
 
@@ -98,6 +99,18 @@ Drawer.prototype.drawTympanum = function(){
     return DRAW(this.tympanum);
 }
 
+Drawer.prototype.addColums = function(colums){
+    this.colums = colums;
+}
+
+Drawer.prototype.drawColums = function(){
+    if (this.colums === undefined){
+            alert("Create the model \"colums\" before draw it!");
+            return;
+    }
+    return DRAW(this.colums);
+}
+
 // draw all components
 Drawer.prototype.drawAll = function(){
     return DRAW(STRUCT([this.mainStructure,this.foundation])); // TODO
@@ -141,6 +154,7 @@ domains.railTopDomain = DOMAIN([[0,1],[0,1]])([25,1]); // 20
 domains.railBaseDomain = DOMAIN([[0,1],[0,1]])([10,1]); // 10, 1
 domains.mullionDomain = DOMAIN([[0,1],[0,2*PI]])([20,10]); // 10,10 - 20,10
 domains.ledgeDomain = DOMAIN([[0,1],[0,1]])([50,1]);
+domains.columnDomain = DOMAIN([[0,1],[0,2*PI]])([60,60]);
 
 /*
     Function that generates villa's foundation
@@ -710,14 +724,7 @@ function buildingWall(){
 						lateralWall, T([1])([3.46*p])(S([1])([-1])(lateralWall)),
 						]);
 
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.05*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.293*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.536*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.814*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.057*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.3*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-
-	return COLOR(colors.hue)(STRUCT([floor,lodgeFloor,basement,topProjection,walls]));
+	return COLOR(colors.hue)(STRUCT([floor,lodgeFloor,basement,topProjection,walls])); // TODO stringere porta
 
 }
 
@@ -1208,8 +1215,6 @@ function tympanum(){
 	top = R([1,2])(PI/5.9)(top);
 	top = T([0,1,2])([2.19*p,1.016*p,(hb+4*hl+0.0065+0.011)*p])(top);
 	
-	// bottom cover T([0,1,2])([2.19*p,0.99*p,(hb+4*hl+0.0685)*p])(bottom);
-
 	var cover = STRUCT([
 			TRIANGLE_DOMAIN(1,[[2.239*p,1.001*p,(hb+4*hl+0.0685)*p],[2.239*p,2.459*p,(hb+4*hl+0.0685)*p],[2*p,1.001*p,(hb+4*hl+0.0685)*p]]),
 			TRIANGLE_DOMAIN(1,[[2.239*p,2.459*p,(hb+4*hl+0.0685)*p],[2*p,1.001*p,(hb+4*hl+0.0685)*p],[2*p,2.459*p,(hb+4*hl+0.0685)*p]]),
@@ -1217,15 +1222,16 @@ function tympanum(){
 		]);
 
 
-	// guttae
+	// Guttae
 
 	var gutta = STRUCT([
-			SIMPLEX_GRID([[0.029*p],[0.026*p],[-0.020*p, 0.004*p]]),
-			SIMPLEX_GRID([[0.028*p], [-0.001*p,0.024*p], [0.020*p]])
+			SIMPLEX_GRID([[0.029*p],[0.022*p],[-0.018*p, 0.004*p]]),
+			SIMPLEX_GRID([[0.028*p], [-0.001*p,0.020*p], [0.018*p]])
 		]);
 
 	var guttae = STRUCT([
-			T([0,1,2])([3.19*p,0.99*p,(hb+4*hl+0.0685)*p])(gutta)
+			T([0,1,2])([2.205*p,1.052*p,(hb+4*hl+0.071)*p])(R([1,2])(PI/5.9)(gutta)),
+			T([0,1,2])([2.205*p,1.052*p,(hb+4*hl+0.034)*p])(gutta),
 		]);
 
 	return COLOR(colors.hue)(
@@ -1240,11 +1246,75 @@ function tympanum(){
 
 }
 
-function buildingRoof(){
+
+function colums(){
+
+	// Get proportion
+	var p = scale.proportion || 1;
+
+	// height foundation steps
+	var h1 = 0.16;
+	var h2 = 0.08885;
+	var hs = 0.01777;
+
+	// height building
+	var hb = 0.795+h1+h2;
+	var hc = 0.745;
+
+	var base = CUBOID([0.11*p,0.11*p,(hs-0.2*hs)*p]);
+
+	var top = SIMPLEX_GRID([[-0.010*p,0.090*p],[-0.010*p,0.090*p],[-(hc-0.003)*p,0.003*p]]);
+
+	var profile = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,16,16])(
+						[[(0.055-0.002)*p,	0,	(hs-0.2*hs)*p],
+						[		0.055*p,	0,	(hs-0.2*hs+0.005)*p],
+						[ (0.055-0.005)*p,	0,	(hs-0.2*hs+0.010)*p], [ (0.055-0.005)*p,	0,	(hs-0.2*hs+0.010)*p],
+						[ (0.055-0.005)*p,	0,	(hs-0.2*hs+0.012)*p], [ (0.055-0.005)*p,	0,	(hs-0.2*hs+0.012)*p],
+						[ (0.055-0.009)*p,	0,	(hs-0.2*hs+0.017)*p],
+						[ (0.055-0.006)*p,	0,	(hs-0.2*hs+0.022)*p], [ (0.055-0.006)*p,	0,	(hs-0.2*hs+0.022)*p],
+						[ (0.055-0.006)*p,	0,	(hs-0.2*hs+0.024)*p], [ (0.055-0.006)*p,	0,	(hs-0.2*hs+0.024)*p],
+						[ (0.055-0.005)*p,	0,	(hs-0.2*hs+0.029)*p],
+						[ (0.055-0.009)*p,	0,	(hs-0.2*hs+0.034)*p], [ (0.055-0.009)*p,	0,	(hs-0.2*hs+0.034)*p],
+						[ (0.055-0.009)*p,	0,	(hs-0.2*hs+0.036)*p], [ (0.055-0.009)*p,	0,	(hs-0.2*hs+0.036)*p],
+						[ (0.055-0.012)*p,	0,	(hs-0.2*hs+0.036)*p],
+						[ (0.055-0.012)*p,	0,	(hc)*p], //18
+						]);
+
+
+	var profile = ROTATIONAL_SURFACE(profile);
+	var surface = MAP(profile)(domains.columnDomain);
+
+	surface.translate([0,1],[0.055*p,0.055*p]);
+
+	var singleColumn = STRUCT([
+			base,
+			top,
+			surface
+		]);
+
+	return COLOR(colors.hue)(
+			STRUCT([
+				T([0,1,2])([2.085*p,1.05*p,(h1+h2+10*hs)*p])(singleColumn),
+				T([0,1,2])([2.085*p,1.293*p,(h1+h2+10*hs)*p])(singleColumn),
+				T([0,1,2])([2.085*p,1.536*p,(h1+h2+10*hs)*p])(singleColumn),
+				T([0,1,2])([2.085*p,1.814*p,(h1+h2+10*hs)*p])(singleColumn),
+				T([0,1,2])([2.085*p,2.057*p,(h1+h2+10*hs)*p])(singleColumn),
+				T([0,1,2])([2.085*p,2.3*p,(h1+h2+10*hs)*p])(singleColumn)
+			])
+		);
 
 }
 
-function colums(){
+/*
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.05*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.293*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.536*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.814*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.057*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.3*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
+*/
+
+function buildingRoof(){
 
 }
 
@@ -1261,6 +1331,7 @@ function buildingComponents(){
 function drawVilla(){
 	var drawer = new Drawer();
 
+	
 	drawer.addFoundation(foundation());
 	drawer.drawFoundation();
 	drawer.addSteps(steps());
@@ -1275,6 +1346,11 @@ function drawVilla(){
 
 	drawer.addTympanum(tympanum());
 	drawer.drawTympanum();
+	
+
+	drawer.addColums(colums());
+	drawer.drawColums();
+
 	//drawer.all();
 }
 
