@@ -1419,8 +1419,6 @@ function colums(){
 			(S([0])([-1])(centerCapital)).translate([0],[0.11*p]),
 		]);
 
-	return singleColumn;
-
 	return COLOR(colors.hue)(
 			STRUCT([
 				T([0,1,2])([2.085*p,1.05*p,(h1+h2+10*hs)*p])(singleColumn), //TODO
