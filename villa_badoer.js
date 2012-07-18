@@ -1164,7 +1164,7 @@ function tympanum(){
 						[0.060*p,0,0.084*p], //33
 						]);
 
-	len = 0.8785; //87
+	len = 0.8785;
 
 	var topProfileRigth = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17, //20
 									 18,19,20,21,22,23,24,25,26,27,28,28,28])(
@@ -1248,6 +1248,10 @@ function tympanum(){
 			TRIANGLE_DOMAIN(1,[[2.239*p,1.001*p,(hb+4*hl+0.0685)*p],[2.239*p,2.459*p,(hb+4*hl+0.0685)*p],[2*p,1.001*p,(hb+4*hl+0.0685)*p]]),
 			TRIANGLE_DOMAIN(1,[[2.239*p,2.459*p,(hb+4*hl+0.0685)*p],[2*p,1.001*p,(hb+4*hl+0.0685)*p],[2*p,2.459*p,(hb+4*hl+0.0685)*p]]),
 			TRIANGLE_DOMAIN(1,[[2.190*p,1.001*p,(hb+4*hl+0.0685)*p],[2.190*p,2.459*p,(hb+4*hl+0.0685)*p],[2.190*p,1.73*p,(hb+0.7)*p]]),
+
+			TRIANGLE_DOMAIN(1,[[2.190*p,1.048*p,(hb+4*hl+0.0065)*p],[2.190*p,2.410*p,(hb+4*hl+0.0065)*p],[2*p,1.048*p,(hb+4*hl+0.0065)*p]]),
+			TRIANGLE_DOMAIN(1,[[2.190*p,2.410*p,(hb+4*hl+0.0065)*p],[2*p,1.048*p,(hb+4*hl+0.0065)*p],[2*p,2.410*p,(hb+4*hl+0.0065)*p]]),
+		
 		]);
 
 
@@ -1421,12 +1425,12 @@ function colums(){
 
 	return COLOR(colors.hue)(
 			STRUCT([
-				T([0,1,2])([2.085*p,1.05*p,(h1+h2+10*hs)*p])(singleColumn), //TODO
-				T([0,1,2])([2.085*p,1.293*p,(h1+h2+10*hs)*p])(singleColumn),
-				T([0,1,2])([2.085*p,1.536*p,(h1+h2+10*hs)*p])(singleColumn),
-				T([0,1,2])([2.085*p,1.814*p,(h1+h2+10*hs)*p])(singleColumn),
-				T([0,1,2])([2.085*p,2.057*p,(h1+h2+10*hs)*p])(singleColumn),
-				T([0,1,2])([2.085*p,2.3*p,(h1+h2+10*hs)*p])(singleColumn)
+				singleColumn.translate([0,1,2],[2.085*p,1.05*p,(h1+h2+10*hs)*p]),
+				T([1])([0.243*p])(singleColumn),
+				T([1])([0.486*p])(singleColumn),
+				T([1])([0.764*p])(singleColumn),
+				T([1])([1.007*p])(singleColumn),
+				T([1])([1.25*p])(singleColumn)
 			])
 		);
 
