@@ -24,6 +24,7 @@ function Drawer(){
 	this.tympanum = undefined;
 	this.colums = undefined;
 	this.guttae = undefined;
+	this.buildingRoof = undefined;
 }
 
 
@@ -124,6 +125,18 @@ Drawer.prototype.drawGuttae = function(){
     return DRAW(this.guttae);
 }
 
+Drawer.prototype.addBuildingRoof = function(buildingRoof){
+    this.buildingRoof = buildingRoof;
+}
+
+Drawer.prototype.drawBuildingRoof = function(){
+    if (this.buildingRoof === undefined){
+            alert("Create the model \"buildingRoof\" before draw it!");
+            return;
+    }
+    return DRAW(this.buildingRoof);
+}
+
 // draw all components
 Drawer.prototype.drawAll = function(){
     return DRAW(STRUCT([this.mainStructure,this.foundation])); // TODO
@@ -152,6 +165,8 @@ var colors = new Colors();
 colors.foundation = [200/255,230/255,240/255];
 colors.hue = [1/255,230/255,240/255];
 colors.baseFrontLedge = [1/255,200/255,240/255];
+colors.roof = [100/255,200/255,30/255];
+
 
 
 /*
@@ -695,9 +710,9 @@ function buildingWall(){
 	var lodgeWallPart01 = getWall(p,[[1.7,1.09,h1+h2+10*hs],[1.7,1.15,h1+h2+10*hs],[1.7,1.15,h1+h2+10*hs+hc],[1.7,1.09,h1+h2+10*hs+hc]]);
 	var lodgeWallPart02 = getWall(p,[[1.7,1.15,h1+h2+10*hs],[1.7,1.25,h1+h2+10*hs],[1.7,1.25,h1+h2+10*hs+0.23],[1.7,1.15,h1+h2+10*hs+0.23]]);
 	var lodgeWallPart03 = getWall(p,[[1.7,1.15,h1+h2+10*hs+2/3*hc],[1.7,1.25,h1+h2+10*hs+2/3*hc],[1.7,1.25,h1+h2+10*hs+hc],[1.7,1.15,h1+h2+10*hs+hc]]);
-	var lodgeWallPart04 = getWall(p,[[1.7,1.25,h1+h2+10*hs],[1.7,1.646,h1+h2+10*hs],[1.7,1.646,h1+h2+10*hs+hc],[1.7,1.25,h1+h2+10*hs+hc]]);
-	var lodgeWallPart05 = getWall(p,[[1.7,1.646,h1+h2+10*hs+2/3*hc],[1.7,1.814,h1+h2+10*hs+2/3*hc],[1.7,1.814,h1+h2+10*hs+hc],[1.7,1.646,h1+h2+10*hs+hc]]);
-	var lodgeWallPart06 = getWall(p,[[1.7,1.814,h1+h2+10*hs],[1.7,2.210,h1+h2+10*hs],[1.7,2.210,h1+h2+10*hs+hc],[1.7,1.814,h1+h2+10*hs+hc]]);
+	var lodgeWallPart04 = getWall(p,[[1.7,1.25,h1+h2+10*hs],[1.7,1.637,h1+h2+10*hs],[1.7,1.637,h1+h2+10*hs+hc],[1.7,1.25,h1+h2+10*hs+hc]]);
+	var lodgeWallPart05 = getWall(p,[[1.7,1.637,h1+h2+10*hs+2/3*hc],[1.7,1.823,h1+h2+10*hs+2/3*hc],[1.7,1.823,h1+h2+10*hs+hc],[1.7,1.637,h1+h2+10*hs+hc]]);
+	var lodgeWallPart06 = getWall(p,[[1.7,1.823,h1+h2+10*hs],[1.7,2.210,h1+h2+10*hs],[1.7,2.210,h1+h2+10*hs+hc],[1.7,1.823,h1+h2+10*hs+hc]]);
 	var lodgeWallPart07 = getWall(p,[[1.7,2.210,h1+h2+10*hs],[1.7,2.310,h1+h2+10*hs],[1.7,2.310,h1+h2+10*hs+0.23],[1.7,2.210,h1+h2+10*hs+0.23]]);
 	var lodgeWallPart08 = getWall(p,[[1.7,2.210,h1+h2+10*hs+2/3*hc],[1.7,2.310,h1+h2+10*hs+2/3*hc],[1.7,2.310,h1+h2+10*hs+hc],[1.7,2.210,h1+h2+10*hs+hc]]);
 	var lodgeWallPart09 = getWall(p,[[1.7,2.310,h1+h2+10*hs],[1.7,2.370,h1+h2+10*hs],[1.7,2.370,h1+h2+10*hs+hc],[1.7,2.310,h1+h2+10*hs+hc]]);
@@ -1341,7 +1356,7 @@ function colums(){
 
 	// center
 	var spiralCenter = NUBS(S0)(2)(generateS0Knots(4,2))([[-0.015*p,0,0],[-0.005*p,0,0.015*p],[-0.005*p,0,0.03*p],[0,0,0.03*p]]);
-	spiralCenter = MAP(ROTATIONAL_SURFACE(spiralCenter))(DOMAIN([[0,1],[0,2*PI]])([10,50]));
+	spiralCenter = MAP(ROTATIONAL_SURFACE(spiralCenter))(DOMAIN([[0,1],[0,2*PI]])([10,50])); // TODO
 
 	// tail
 	var lengthCapital1 = NUBS(S0)(2)(generateS0Knots(24,2))(
@@ -1355,7 +1370,22 @@ function colums(){
 		);
 
 	var lengthCapital = BEZIER(S1)([lengthCapital1,lengthCapital2,lengthCapital3]);
-	lengthCapital = MAP(lengthCapital)(DOMAIN([[0,1],[0,1]])([50,10]));
+	lengthCapital = MAP(lengthCapital)(DOMAIN([[0,1],[0,1]])([50,10])); // TODO
+
+
+	// center piece
+
+	prof1 = NUBS(S0)(2)(generateS0Knots(4,2))([
+			[0,0,0],[0.0105*p,0,-0.002*p],[0.0095*p,0,0.0115*p],[0,0,0.01*p]
+		]);
+
+	prof2 = NUBS(S0)(2)(generateS0Knots(4,2))([
+			[0,0.05*p,0],[0.0105*p,0.06*p,-0.002*p],[0.0095*p,0.06*p,0.0115*p],[0,0.06*p,0.01*p]
+		]);
+
+	var centerCapital = MAP(BEZIER(S1)([prof2,prof1]))(DOMAIN([[0,1],[0,1]])([20,20]));
+
+	centerCapital.translate([0,1,2],[0.090*p,0.025*p,(hc-0.018)*p]);
 
 
 	var capital = STRUCT([
@@ -1375,6 +1405,8 @@ function colums(){
 	var capital4 = S([1])([-1])(capital);
 	capital4.translate([1],[0.11*p]);
 
+
+
 	var singleColumn = STRUCT([
 			base,
 			top,
@@ -1382,12 +1414,16 @@ function colums(){
 			capital,
 			capital2,
 			capital3,
-			capital4
+			capital4,
+			centerCapital,
+			(S([0])([-1])(centerCapital)).translate([0],[0.11*p]),
 		]);
+
+	return singleColumn;
 
 	return COLOR(colors.hue)(
 			STRUCT([
-				T([0,1,2])([2.085*p,1.05*p,(h1+h2+10*hs)*p])(singleColumn),
+				T([0,1,2])([2.085*p,1.05*p,(h1+h2+10*hs)*p])(singleColumn), //TODO
 				T([0,1,2])([2.085*p,1.293*p,(h1+h2+10*hs)*p])(singleColumn),
 				T([0,1,2])([2.085*p,1.536*p,(h1+h2+10*hs)*p])(singleColumn),
 				T([0,1,2])([2.085*p,1.814*p,(h1+h2+10*hs)*p])(singleColumn),
@@ -1647,7 +1683,42 @@ function guttae(){
 
 function buildingRoof(){
 
+	// Get proportion
+	var p = scale.proportion || 1;
+
+	// height foundation steps
+	var h1 = 0.16;
+	var h2 = 0.08885;
+	var hs = 0.01777;
+
+	// height building
+	var hb = 0.795+h1+h2;
+	var hc = 0.745;
+
+	// height ledge hl*2
+	var hl = (hb-hc-10*hs)/2;
+
+	function getRoof(p,controlPoints){
+		return STRUCT([
+					TRIANGLE_DOMAIN(1,[PROD([p,controlPoints[0]]),PROD([p,controlPoints[1]]),PROD([p,controlPoints[3]])]),
+					TRIANGLE_DOMAIN(1,[PROD([p,controlPoints[1]]),PROD([p,controlPoints[3]]),PROD([p,controlPoints[2]])])
+				]);
+	}
+
+	return COLOR(colors.roof)(
+			STRUCT([
+				getRoof(p,[[2.25,0.973,hb+4*hl+0.0897],[2.25,1.73,hb+4*hl+0.5357], [1.28,1.73,hb+4*hl+0.5357], [1.28,0.973,hb+4*hl+0.0897]]),
+				getRoof(p,[[2.25,1.73,hb+4*hl+0.5357], [2.25,2.486,hb+4*hl+0.0897], [1.28,2.486,hb+4*hl+0.0897],[1.28,1.73,hb+4*hl+0.5357]]),
+				getRoof(p,[[2.205,0.355,hb+4*hl+0.0897], [2.205,0.973,hb+4*hl+0.0897], [1.28,1.73,hb+4*hl+0.5357], [1.28,1.05,hb+4*hl+0.5357]]),
+				getRoof(p,[[2.205,2.486,hb+4*hl+0.0897],[2.205,3.105,hb+4*hl+0.0897], [1.28,2.41,hb+4*hl+0.5357],[1.28,1.73,hb+4*hl+0.5357]]),
+				TRIANGLE_DOMAIN(1,[[2.205*p,0.355*p,(hb+4*hl+0.0897)*p],[1.28*p,1.05*p,(hb+4*hl+0.5357)*p],[0.355*p,0.355*p,(hb+4*hl+0.0897)*p]]),
+				TRIANGLE_DOMAIN(1,[[2.205*p,3.105*p,(hb+4*hl+0.0897)*p],[1.28*p,2.41*p,(hb+4*hl+0.5357)*p],[0.355*p,3.105*p,(hb+4*hl+0.0897)*p]]),
+				getRoof(p,[[0.355,0.355,hb+4*hl+0.0897], [0.355,3.105,hb+4*hl+0.0897], [1.28,2.41,hb+4*hl+0.5357], [1.28,1.05,hb+4*hl+0.5357]]),
+			])
+		);
+
 }
+
 
 // finestre porte
 function buildingComponents(){
@@ -1661,8 +1732,7 @@ function buildingComponents(){
 */
 function drawVilla(){
 	var drawer = new Drawer();
-
-//	/*
+/*
 	drawer.addFoundation(foundation());
 	drawer.drawFoundation();
 	drawer.addSteps(steps());
@@ -1677,14 +1747,16 @@ function drawVilla(){
 
 	drawer.addTympanum(tympanum());
 	drawer.drawTympanum();
-	
-//	*/
+*/
 	drawer.addColums(colums());
 	drawer.drawColums();
-
+/*
 	drawer.addGuttae(guttae());
 	drawer.drawGuttae();
 
+	drawer.addBuildingRoof(buildingRoof());
+	drawer.drawBuildingRoof();
+*/
 	//drawer.all();
 }
 
