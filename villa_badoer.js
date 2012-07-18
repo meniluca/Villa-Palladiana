@@ -23,6 +23,7 @@ function Drawer(){
 	this.ledge = undefined;
 	this.tympanum = undefined;
 	this.colums = undefined;
+	this.guttae = undefined;
 }
 
 
@@ -111,6 +112,18 @@ Drawer.prototype.drawColums = function(){
     return DRAW(this.colums);
 }
 
+Drawer.prototype.addGuttae = function(guttae){
+    this.guttae = guttae;
+}
+
+Drawer.prototype.drawGuttae = function(){
+    if (this.guttae === undefined){
+            alert("Create the model \"guttae\" before draw it!");
+            return;
+    }
+    return DRAW(this.guttae);
+}
+
 // draw all components
 Drawer.prototype.drawAll = function(){
     return DRAW(STRUCT([this.mainStructure,this.foundation])); // TODO
@@ -155,6 +168,7 @@ domains.railBaseDomain = DOMAIN([[0,1],[0,1]])([10,1]); // 10, 1
 domains.mullionDomain = DOMAIN([[0,1],[0,2*PI]])([20,10]); // 10,10 - 20,10
 domains.ledgeDomain = DOMAIN([[0,1],[0,1]])([50,1]);
 domains.columnDomain = DOMAIN([[0,1],[0,2*PI]])([60,60]);
+domains.spiralDomain = DOMAIN([[0,1],[0,1]])([50,50]);
 
 /*
     Function that generates villa's foundation
@@ -1222,21 +1236,8 @@ function tympanum(){
 		]);
 
 
-	// Guttae
-
-	var gutta = STRUCT([
-			SIMPLEX_GRID([[0.029*p],[0.022*p],[-0.018*p, 0.004*p]]),
-			SIMPLEX_GRID([[0.028*p], [-0.001*p,0.020*p], [0.018*p]])
-		]);
-
-	var guttae = STRUCT([
-			T([0,1,2])([2.205*p,1.052*p,(hb+4*hl+0.071)*p])(R([1,2])(PI/5.9)(gutta)),
-			T([0,1,2])([2.205*p,1.052*p,(hb+4*hl+0.034)*p])(gutta),
-		]);
-
 	return COLOR(colors.hue)(
 			STRUCT([
-				guttae,
 				bottom,
 				cover,
 				top,
@@ -1263,9 +1264,9 @@ function colums(){
 
 	var base = CUBOID([0.11*p,0.11*p,(hs-0.2*hs)*p]);
 
-	var top = SIMPLEX_GRID([[-0.010*p,0.090*p],[-0.010*p,0.090*p],[-(hc-0.003)*p,0.003*p]]);
+	var top = SIMPLEX_GRID([[-0.008*p,0.096*p],[-0.008*p,0.096*p],[-(hc-0.003)*p,0.003*p]]);
 
-	var profile = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,16,16])(
+	var profile = NUBS(S0)(2)([0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,27,27])(
 						[[(0.055-0.002)*p,	0,	(hs-0.2*hs)*p],
 						[		0.055*p,	0,	(hs-0.2*hs+0.005)*p],
 						[ (0.055-0.005)*p,	0,	(hs-0.2*hs+0.010)*p], [ (0.055-0.005)*p,	0,	(hs-0.2*hs+0.010)*p],
@@ -1277,7 +1278,15 @@ function colums(){
 						[ (0.055-0.009)*p,	0,	(hs-0.2*hs+0.034)*p], [ (0.055-0.009)*p,	0,	(hs-0.2*hs+0.034)*p],
 						[ (0.055-0.009)*p,	0,	(hs-0.2*hs+0.036)*p], [ (0.055-0.009)*p,	0,	(hs-0.2*hs+0.036)*p],
 						[ (0.055-0.012)*p,	0,	(hs-0.2*hs+0.036)*p],
-						[ (0.055-0.012)*p,	0,	(hc)*p], //18
+						[ (0.055-0.014)*p,	0,	(hc/1.7)*p], //18
+						[ (0.055-0.018-0.004)*p,	0,	(hc-0.022)*p], //18
+						[ (0.055-0.018-0.004)*p,	0,	(hc-0.017)*p],
+						[ (0.055-0.014-0.004)*p,	0,	(hc-0.017)*p], [ (0.055-0.014-0.004)*p,	0,	(hc-0.017)*p],
+						[ (0.055-0.014-0.004)*p,	0,	(hc-0.015)*p], [ (0.055-0.014-0.004)*p,	0,	(hc-0.015)*p],
+						[ (0.055-0.006-0.004)*p,	0,	(hc-0.015)*p],						
+						[ (0.055-0.006-0.004)*p,	0,	(hc-0.008)*p], [ (0.055-0.006-0.004)*p,	0,	(hc-0.008)*p],
+						[ 		(0.055-0.004)*p,	0,	(hc-0.004)*p],
+						[ (0.055-0.004-0.004)*p,	0,	(hc)*p]
 						]);
 
 
@@ -1286,10 +1295,94 @@ function colums(){
 
 	surface.translate([0,1],[0.055*p,0.055*p]);
 
+
+	//
+	// Capital
+	//
+
+
+	var capitalControls = function(raggioMax) {
+		raggioMax = raggioMax || 0.8;
+		var controlPoints = [];
+
+		var i = 0;
+		var angolo = PI/4;
+
+		for (i = 0; i < 24; i++) {
+			controlPoints.push( [raggioMax * ( COS(i*angolo) + i*SIN(i*angolo)  ), raggioMax * ( SIN(i*angolo) - i*COS(i*angolo)  ), 0] );
+		}
+
+		return controlPoints;
+	};
+	
+
+	var generateS0Knots = function(cardP, gradoC) { //TODO TOGLIERE
+		var knotsC = cardP + gradoC + 1;
+		var knots = [0,0,0];
+		for(var i = 0; i < (knotsC - 3 - 3); i++) {
+			knots.push(i+1);
+		}
+
+		knots.push(i+1);
+		knots.push(i+1);
+		knots.push(i+1);
+
+		return knots;
+	};
+
+
+	var prof1 = NUBS(S1)(2)(generateS0Knots(24,2))(capitalControls());
+
+	var prof2 = NUBS(S0)(2)(generateS0Knots(8,2))([[0.015,0,0],[0.01,0,0.001],[0,0,0.15],
+		[0.015,0,0.29],
+		[0.02,0,0.3],[0.025,0,0.29],[0.03,0,0.001],[0.025,0,0]]);
+
+	var spiral = MAP(PROFILEPROD_SURFACE([prof2,prof1]))(domains.spiralDomain);
+
+	// center
+	var spiralCenter = NUBS(S0)(2)(generateS0Knots(4,2))([[-0.015*p,0,0],[-0.005*p,0,0.015*p],[-0.005*p,0,0.03*p],[0,0,0.03*p]]);
+	spiralCenter = MAP(ROTATIONAL_SURFACE(spiralCenter))(DOMAIN([[0,1],[0,2*PI]])([10,50]));
+
+	// tail
+	var lengthCapital1 = NUBS(S0)(2)(generateS0Knots(24,2))(
+			AA(function (elem) { return [elem[0]*0.025,elem[1]*0.025,elem[2]*0.025];})(capitalControls())
+		);
+	var lengthCapital2 = NUBS(S0)(2)(generateS0Knots(24,2))( 
+			AA(function (elem) { return [elem[0]*0.021,elem[1]*0.021,elem[2]*0.021-0.01];})(capitalControls())
+		);
+	var lengthCapital3 = NUBS(S0)(2)(generateS0Knots(24,2))( 
+			AA(function (elem) { return [elem[0]*0.020,elem[1]*0.020,elem[2]*0.020-0.6];})(capitalControls())
+		);
+
+	var lengthCapital = BEZIER(S1)([lengthCapital1,lengthCapital2,lengthCapital3]);
+	lengthCapital = MAP(lengthCapital)(DOMAIN([[0,1],[0,1]])([50,10]));
+
+
+	var capital = STRUCT([
+			spiral,
+			spiralCenter.translate([0,1],[-0.009,0.015]),
+			lengthCapital,
+		]);
+
+	capital.rotate([0,2],[PI/2]);
+	capital.rotate([1,2],[-PI/12]);
+	capital.scale([0,1,2],[0.5,0.5,0.5]);
+	var capital2 = S([0])([-1])(capital);
+	capital.translate([0,1,2],[0.085*p,0.090*p,(hc-0.028)*p]);
+	capital2.translate([0,1,2],[0.025*p,0.090*p,(hc-0.028)*p]);
+	var capital3 = S([1])([-1])(capital2);
+	capital3.translate([1],[0.11*p]);
+	var capital4 = S([1])([-1])(capital);
+	capital4.translate([1],[0.11*p]);
+
 	var singleColumn = STRUCT([
 			base,
 			top,
-			surface
+			surface,
+			capital,
+			capital2,
+			capital3,
+			capital4
 		]);
 
 	return COLOR(colors.hue)(
@@ -1302,6 +1395,40 @@ function colums(){
 				T([0,1,2])([2.085*p,2.3*p,(h1+h2+10*hs)*p])(singleColumn)
 			])
 		);
+
+}
+
+
+function guttae(){
+
+	// Get proportion
+	var p = scale.proportion || 1;
+
+	// height foundation steps
+	var h1 = 0.16;
+	var h2 = 0.08885;
+	var hs = 0.01777;
+
+	// height building
+	var hb = 0.795+h1+h2;
+	var hc = 0.745;
+
+	// height ledge hl*2
+	var hl = (hb-hc-10*hs)/2;
+
+	// Guttae
+
+	var gutta = STRUCT([
+			SIMPLEX_GRID([[0.029*p],[0.022*p],[-0.018*p, 0.004*p]]),
+			SIMPLEX_GRID([[0.028*p], [-0.001*p,0.020*p], [0.018*p]])
+		]);
+
+	var guttae = STRUCT([
+			T([0,1,2])([2.205*p,1.052*p,(hb+4*hl+0.071)*p])(R([1,2])(PI/5.9)(gutta)),
+			T([0,1,2])([2.205*p,1.052*p,(hb+4*hl+0.034)*p])(gutta),
+		]);
+
+	return guttae;
 
 }
 
@@ -1331,7 +1458,7 @@ function buildingComponents(){
 function drawVilla(){
 	var drawer = new Drawer();
 
-	
+//	/*
 	drawer.addFoundation(foundation());
 	drawer.drawFoundation();
 	drawer.addSteps(steps());
@@ -1347,9 +1474,12 @@ function drawVilla(){
 	drawer.addTympanum(tympanum());
 	drawer.drawTympanum();
 	
-
+//	*/
 	drawer.addColums(colums());
 	drawer.drawColums();
+
+	drawer.addGuttae(guttae());
+	drawer.drawGuttae();
 
 	//drawer.all();
 }
