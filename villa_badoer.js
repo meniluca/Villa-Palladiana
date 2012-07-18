@@ -1730,7 +1730,7 @@ function buildingComponents(){
 */
 function drawVilla(){
 	var drawer = new Drawer();
-/*
+
 	drawer.addFoundation(foundation());
 	drawer.drawFoundation();
 	drawer.addSteps(steps());
@@ -1745,16 +1745,16 @@ function drawVilla(){
 
 	drawer.addTympanum(tympanum());
 	drawer.drawTympanum();
-*/
+
 	drawer.addColums(colums());
 	drawer.drawColums();
-/*
+
 	drawer.addGuttae(guttae());
 	drawer.drawGuttae();
 
 	drawer.addBuildingRoof(buildingRoof());
 	drawer.drawBuildingRoof();
-*/
+
 	//drawer.all();
 }
 
