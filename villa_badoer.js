@@ -33,11 +33,10 @@ Drawer.prototype.addFoundation = function(foundation){
 }
 
 Drawer.prototype.drawFoundation = function(){
-    if (this.foundation === undefined){
-            alert("Create the model \"foundation\" before draw it!");
-            return;
-    }
-    return DRAW(this.foundation);
+	if (this.foundation === undefined){
+		return alert("Create the model \"foundation\" before draw it!");
+	}
+	return DRAW(this.foundation);
 }
 
 Drawer.prototype.addSteps = function(steps){
@@ -45,11 +44,10 @@ Drawer.prototype.addSteps = function(steps){
 }
 
 Drawer.prototype.drawSteps = function(){
-    if (this.steps === undefined){
-            alert("Create the model \"steps\" before draw it!");
-            return;
-    }
-    return DRAW(this.steps);
+	if (this.steps === undefined){
+		return alert("Create the model \"steps\" before draw it!");
+	}
+	return DRAW(this.steps);
 }
 
 Drawer.prototype.addBaseComponents = function(baseComponents){
@@ -57,11 +55,10 @@ Drawer.prototype.addBaseComponents = function(baseComponents){
 }
 
 Drawer.prototype.drawBaseComponents = function(){
-    if (this.baseComponents === undefined){
-            alert("Create the model \"baseComponents\" before draw it!");
-            return;
-    }
-    return DRAW(this.baseComponents);
+	if (this.baseComponents === undefined){
+		return alert("Create the model \"baseComponents\" before draw it!");
+	}
+	return DRAW(this.baseComponents);
 }
 
 Drawer.prototype.addBuildingWall = function(buildingWall){
@@ -69,11 +66,10 @@ Drawer.prototype.addBuildingWall = function(buildingWall){
 }
 
 Drawer.prototype.drawBuildingWall = function(){
-    if (this.buildingWall === undefined){
-            alert("Create the model \"buildingWall\" before draw it!");
-            return;
-    }
-    return DRAW(this.buildingWall);
+	if (this.buildingWall === undefined){
+		return alert("Create the model \"buildingWall\" before draw it!");
+	}
+	return DRAW(this.buildingWall);
 }
 
 Drawer.prototype.addLedge = function(ledge){
@@ -81,11 +77,10 @@ Drawer.prototype.addLedge = function(ledge){
 }
 
 Drawer.prototype.drawLedge = function(){
-    if (this.ledge === undefined){
-            alert("Create the model \"ledge\" before draw it!");
-            return;
-    }
-    return DRAW(this.ledge);
+	if (this.ledge === undefined){
+		return alert("Create the model \"ledge\" before draw it!");
+	}
+	return DRAW(this.ledge);
 }
 
 
@@ -94,11 +89,10 @@ Drawer.prototype.addTympanum = function(tympanum){
 }
 
 Drawer.prototype.drawTympanum = function(){
-    if (this.tympanum === undefined){
-            alert("Create the model \"tympanum\" before draw it!");
-            return;
-    }
-    return DRAW(this.tympanum);
+	if (this.tympanum === undefined){
+		return alert("Create the model \"tympanum\" before draw it!");
+	}
+	return DRAW(this.tympanum);
 }
 
 Drawer.prototype.addColums = function(colums){
@@ -106,11 +100,10 @@ Drawer.prototype.addColums = function(colums){
 }
 
 Drawer.prototype.drawColums = function(){
-    if (this.colums === undefined){
-            alert("Create the model \"colums\" before draw it!");
-            return;
-    }
-    return DRAW(this.colums);
+	if (this.colums === undefined){
+		return alert("Create the model \"colums\" before draw it!");
+	}
+	return DRAW(this.colums);
 }
 
 Drawer.prototype.addGuttae = function(guttae){
@@ -118,11 +111,10 @@ Drawer.prototype.addGuttae = function(guttae){
 }
 
 Drawer.prototype.drawGuttae = function(){
-    if (this.guttae === undefined){
-            alert("Create the model \"guttae\" before draw it!");
-            return;
-    }
-    return DRAW(this.guttae);
+	if (this.guttae === undefined){
+		return alert("Create the model \"guttae\" before draw it!");
+	}
+	return DRAW(this.guttae);
 }
 
 Drawer.prototype.addBuildingRoof = function(buildingRoof){
@@ -131,16 +123,11 @@ Drawer.prototype.addBuildingRoof = function(buildingRoof){
 
 Drawer.prototype.drawBuildingRoof = function(){
     if (this.buildingRoof === undefined){
-            alert("Create the model \"buildingRoof\" before draw it!");
-            return;
+            return alert("Create the model \"buildingRoof\" before draw it!");
     }
     return DRAW(this.buildingRoof);
 }
 
-// draw all components
-Drawer.prototype.drawAll = function(){
-    return DRAW(STRUCT([this.mainStructure,this.foundation])); // TODO
-}
 
 
 /*
@@ -162,10 +149,10 @@ function Colors(){};
 
 var colors = new Colors();
 
-colors.foundation = [83/255,59/255,44/255];
-colors.hue = [1,1,0.9];
+colors.foundation 	= 	[83/255,59/255,44/255];
+colors.hue 			= 	[1,1,0.9];
 colors.baseFrontLedge = [185/255,185/255,168/255];
-colors.roof = [114/255,78/255,61/255];
+colors.roof 		=	[114/255,78/255,61/255];
 
 
 
@@ -177,13 +164,16 @@ function Domains(){};
 
 var domains = new Domains();
 
-domains.stepDomain = DOMAIN([[0,1],[0,1]])([10,1]);
-domains.railTopDomain = DOMAIN([[0,1],[0,1]])([25,1]); // 20
-domains.railBaseDomain = DOMAIN([[0,1],[0,1]])([10,1]); // 10, 1
-domains.mullionDomain = DOMAIN([[0,1],[0,2*PI]])([20,10]); // 10,10 - 20,10
-domains.ledgeDomain = DOMAIN([[0,1],[0,1]])([50,1]);
-domains.columnDomain = DOMAIN([[0,1],[0,2*PI]])([60,60]);
-domains.spiralDomain = DOMAIN([[0,1],[0,1]])([50,50]);
+domains.stepDomain 		= 	DOMAIN([[0,1],[0,1]])([10,1]);
+domains.railTopDomain 	= 	DOMAIN([[0,1],[0,1]])([25,1]); // 20
+domains.railBaseDomain 	= 	DOMAIN([[0,1],[0,1]])([10,1]); // 10, 1
+domains.mullionDomain 	= 	DOMAIN([[0,1],[0,2*PI]])([20,10]); // 10,10 - 20,10
+domains.ledgeDomain 	= 	DOMAIN([[0,1],[0,1]])([50,1]);
+domains.columnDomain 	= 	DOMAIN([[0,1],[0,2*PI]])([60,60]);
+domains.spiralDomain 	= 	DOMAIN([[0,1],[0,1]])([50,50]);
+domains.depthCapitalDomain = DOMAIN([[0,1],[0,1]])([50,10]);
+domains.spiralCenterDomain = DOMAIN([[0,1],[0,2*PI]])([10,50]);
+domains.centerCapitalDomain = DOMAIN([[0,1],[0,1]])([20,20]);
 
 /*
     Function that generates villa's foundation
@@ -1320,7 +1310,7 @@ function colums(){
 	//
 
 
-	var capitalControls = function(raggioMax) {
+	var capitalControls = function(raggioMax) { // TODO
 		raggioMax = raggioMax || 0.8;
 		var controlPoints = [];
 
@@ -1360,7 +1350,7 @@ function colums(){
 
 	// center
 	var spiralCenter = NUBS(S0)(2)(generateS0Knots(4,2))([[-0.015*p,0,0],[-0.005*p,0,0.015*p],[-0.005*p,0,0.03*p],[0,0,0.03*p]]);
-	spiralCenter = MAP(ROTATIONAL_SURFACE(spiralCenter))(DOMAIN([[0,1],[0,2*PI]])([10,50])); // TODO
+	spiralCenter = MAP(ROTATIONAL_SURFACE(spiralCenter))(domains.spiralCenterDomain); // TODO
 
 	// tail
 	var lengthCapital1 = NUBS(S0)(2)(generateS0Knots(24,2))(
@@ -1374,7 +1364,7 @@ function colums(){
 		);
 
 	var lengthCapital = BEZIER(S1)([lengthCapital1,lengthCapital2,lengthCapital3]);
-	lengthCapital = MAP(lengthCapital)(DOMAIN([[0,1],[0,1]])([50,10])); // TODO
+	lengthCapital = MAP(lengthCapital)(domains.depthCapitalDomain); // TODO
 
 
 	// center piece
@@ -1387,7 +1377,7 @@ function colums(){
 			[0,0.05*p,0],[0.0105*p,0.06*p,-0.002*p],[0.0095*p,0.06*p,0.0115*p],[0,0.06*p,0.01*p]
 		]);
 
-	var centerCapital = MAP(BEZIER(S1)([prof2,prof1]))(DOMAIN([[0,1],[0,1]])([20,20]));
+	var centerCapital = MAP(BEZIER(S1)([prof2,prof1]))(domains.centerCapitalDomain);
 
 	centerCapital.translate([0,1,2],[0.090*p,0.025*p,(hc-0.018)*p]);
 
@@ -1408,8 +1398,6 @@ function colums(){
 	capital3.translate([1],[0.11*p]);
 	var capital4 = S([1])([-1])(capital);
 	capital4.translate([1],[0.11*p]);
-
-
 
 	var singleColumn = STRUCT([
 			base,
@@ -1674,14 +1662,6 @@ function guttae(){
 
 }
 
-/*
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.05*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.293*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.536*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-1.814*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.057*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-	DRAW(COLOR([1,0,0])(SIMPLEX_GRID([[-2.085*p,0.11*p],[-2.3*p,0.11*p],[-(h1+h2+10*hs)*p,hc*p]]))); // una colonna
-*/
 
 function buildingRoof(){
 
@@ -1733,6 +1713,7 @@ function buildingComponents(){
 	Function charged to create an object Drawer and draw the villa
 */
 function drawVilla(){
+
 	var drawer = new Drawer();
 
 	drawer.addFoundation(foundation());
@@ -1759,13 +1740,7 @@ function drawVilla(){
 	drawer.addBuildingRoof(buildingRoof());
 	drawer.drawBuildingRoof();
 
-	//drawer.drawAll();
 }
 
 drawVilla();
 
-
-
-// TO DELETE:
-
-//	DRAW(COLOR([0,0,1])(STRUCT([POLYLINE([[3.63*p,0,0],[3.63*p,3.46*p,0]])])));//,POLYPOINT([[3.6*p,1.09*p,0],[3.64*p,1.09*p,0]])])));
