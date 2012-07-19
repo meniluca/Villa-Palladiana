@@ -167,7 +167,7 @@ colors.baseFrontLedge = [185/255,185/255,168/255];
 colors.roof 		=	[114/255,78/255,61/255];
 colors.black 		=	[0,0,0];
 colors.white 		=	[1,1,1];
-colors.windows		=	[0.64,0.83,0.93,0.8];
+colors.windows		=	[0.64,0.83,0.93,0.6];
 
 
 
@@ -1766,10 +1766,43 @@ function buildingComponents(){
 	var doorFrameLateral = R([1,2])(PI/2)(doorFrameLateralProfile);
 	doorFrameLateral.translate([1],[0.03*p]);
 
+
+	// Top frieze
+	var controlPoints = [[0,0,0],
+				[0.060*p,0,0],[0.060*p,0,0],
+				[0.065*p,0,0.005*p],
+				[0.060*p,0,0.010*p],[0.060*p,0,0.010*p],
+				[0.065*p,0,0.020*p],[0.065*p,0,0.020*p],
+				[0.070*p,0,0.020*p],[0.070*p,0,0.020*p],
+				[0.075*p,0,0.030*p],[0.075*p,0,0.030*p],
+				[0,0,0.030*p]]; //13
+
+	var doorTopMiddleProfile = NUBS(S0)(2)([0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 11])(
+			AA(function (elem) { return [elem[0], elem[1]+0.150*p, elem[2]];})(controlPoints)
+		);
+
+	var doorTopLeftProfile = NUBS(S0)(2)([0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 11])(
+			AA(function (elem) { return [elem[0], 0.055*p-elem[0], elem[2]];})(controlPoints)
+		);
+
+	var doorFriezeTop = BEZIER(S1)([doorTopLeftProfile,doorTopMiddleProfile]);
+	doorFriezeTop = MAP(doorFriezeTop)(domains.depthCapitalDomain); // TODO
+	doorFriezeTop.translate([1,2],[-0.04,(2/3*hc+0.03)*p]);
+
+	//angle top frieze
+	var doorTopAngleProfile = NUBS(S0)(2)([0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 11])(
+			AA(function (elem) { return [elem[0]-0.1*p, 0.055*p-elem[0], elem[2]];})(controlPoints)
+		);
+
+	var doorAngleTop = BEZIER(S1)([doorTopLeftProfile,doorTopAngleProfile]);
+	doorAngleTop = MAP(doorAngleTop)(domains.depthCapitalDomain); // TODO
+	doorAngleTop.translate([1,2],[-0.05,(2/3*hc+0.03)*p]);
+
 	// central lodge's door
 	var doorFrame = STRUCT([
 			doorFrameTop,
 			doorFrameLateral,
+			doorFriezeTop, doorAngleTop,
 			COLOR(colors.roof)(SIMPLEX_GRID([[0.0186*p],[-0.03*p,0.0186*p],[2/3*hc*p]])),
 			COLOR(colors.roof)(SIMPLEX_GRID([[0.0100*p],[-0.0486*p,0.1084*p],[2/3*hc*p]])),
 			COLOR(colors.roof)(SIMPLEX_GRID([[0.0186*p],[-0.0486*p,0.1084*p],[-(2/3*hc-0.0186)*p,0.0186*p]])),
@@ -1846,13 +1879,6 @@ function buildingComponents(){
 
 	lodgeWindow.translate([0,1,2],[(1.7-0.012)*p,1.15*p,(h1+h2+10*hs+0.23)*p]);
 
-/*
-	var lodgeWallPart02 = getWall(p,[[1.7,1.15,h1+h2+10*hs],[1.7,1.25,h1+h2+10*hs],[h1+h2+10*hs+0.23],[1.7,1.15,h1+h2+10*hs+0.23]]);
-	var lodgeWallPart03 = getWall(p,[[1.7,1.15,h1+h2+10*hs+2/3*hc],[1.7,1.25,x+10*hs+2/3*hc],[1.7,1.25,h1+h2+10*hs+hc],[1.7,1.15,h1+h2+10*hs+hc]]);
-	
-*/
-
-
 	// superior 
 	var singleWindow = STRUCT([
 			COLOR(colors.roof)(SIMPLEX_GRID([[-0.005*p,0.0025*p],[-0.010*p, 0.148*p],[-(0.010)*p,(hb-hc-10*hs-0.01)*p]])),
@@ -1922,11 +1948,51 @@ function buildingComponents(){
 
 	littleWindow.translate([0],[-0.012*p]);
 
-	// all left components
+
+	var height = 12*hs;
+
+	// door under stairs
+	var doorUnderStair = STRUCT([
+
+
+			COLOR(colors.black)(SIMPLEX_GRID([[0.002*p],[0.160*p],[height*p]])),
+			COLOR(colors.windows)(SIMPLEX_GRID([[-0.004*p,0.002*p],[0.160*p],[height*p]]).boundary()), // TODO
+
+			COLOR(colors.black)(SIMPLEX_GRID([[0.008*p],[0.008*p],[(height)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[0.008*p],[0.160*p],[(0.008)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[0.008*p],[-0.152*p,0.008*p],[(height)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[0.008*p],[0.160*p],[-(height-0.008)*p,0.008*p]])),
+
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.020*p],[height*p],[0]]).rotate([1,2],[PI/2])),
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.020*p],[0.160*p],[0]]).translate([2],[height*p])),
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.020*p],[height*p],[0]]).rotate([1,2],[PI/2]).translate([1],[0.160*p])),
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.036*p],[0.160*p],[0]]).rotate([0,2],[-PI/2]).translate([0,2],[0.02*p,height*p])),
+
+			POLYLINE([[0.007*p,0,height/2*p],[0.007*p,0.160*p,height/2*p]]),
+			POLYLINE([[0.007*p,0,height/8*p],[0.007*p,0.160*p,height/8*p]]),
+			POLYLINE([[0.007*p,0,height*7/8*p],[0.007*p,0.160*p,height*7/8*p]]),
+
+			POLYLINE([[0.007*p,0,height*p],[0.007*p,0,0]]),
+			POLYLINE([[0.007*p,0.020*p,height*p],[0.007*p,0.020*p,0]]),
+			POLYLINE([[0.007*p,0.040*p,height*p],[0.007*p,0.040*p,0]]),
+			POLYLINE([[0.007*p,0.060*p,height*p],[0.007*p,0.060*p,0]]),
+			COLOR(colors.black)(SIMPLEX_GRID([[0.007*p],[-0.078*p,0.004*p],[(height)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[0.007*p],[-0.078*p,0.020*p],[-(height/2-0.020)*p,(0.020)*p]])),			
+			POLYLINE([[0.007*p,0.100*p,height*p],[0.007*p,0.100*p,0]]),
+			POLYLINE([[0.007*p,0.120*p,height*p],[0.007*p,0.120*p,0]]),
+			POLYLINE([[0.007*p,0.140*p,height*p],[0.007*p,0.140*p,0]]),
+
+		]);
+
+	doorUnderStair.translate([0,1],[2.68*p,0.70*p]);
+
+
+	// struct with all left components
 	var leftComponents = STRUCT([
 			doorFrame,
 			lateralLodgeDoor,
 			lodgeWindow,
+			doorUnderStair,
 
 			// front windows
 			T([0,1,2])([2.14*p,0.67*p,(h1+h2+hb-(hb-hc-10*hs+0.010))*p])(singleWindow),
