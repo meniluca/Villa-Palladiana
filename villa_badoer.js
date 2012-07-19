@@ -166,6 +166,9 @@ colors.hue 			= 	[1,1,0.9];
 colors.baseFrontLedge = [185/255,185/255,168/255];
 colors.roof 		=	[114/255,78/255,61/255];
 colors.black 		=	[0,0,0];
+colors.white 		=	[1,1,1];
+colors.windows		=	[0.64,0.83,0.93,0.8];
+
 
 
 
@@ -1792,6 +1795,64 @@ function buildingComponents(){
 	lateralLodgeDoor.translate([0,1,2],[1.87*p,1.07*p,(h1+h2+10*hs)*p]);
 
 
+	// lateral lodge windows
+	var lodgeWindow = STRUCT([
+
+			COLOR(colors.white)(SIMPLEX_GRID([[0.002*p],[0.100*p],[(2/3*hc-0.23)*p]])),
+			COLOR(colors.windows)(SIMPLEX_GRID([[-0.004*p,0.002*p],[0.100*p],[(2/3*hc-0.23)*p]])),
+
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.008*p],[0.008*p],[(2/3*hc-0.23)*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.008*p],[-0.05*p,0.008*p],[(2/3*hc-0.23)*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.008*p],[0.100*p],[(0.008)*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.008*p],[-0.092*p,0.008*p],[(2/3*hc-0.23)*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.008*p],[0.100*p],[-(2/3*hc-0.23-0.008)*p,0.008*p]])),
+
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.012*p],[0.100*p],[0]])),
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.012*p],[(2/3*hc-0.23)*p],[0]]).rotate([1,2],[PI/2])),
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.012*p],[0.100*p],[0]]).translate([2],[(2/3*hc-0.23)*p])),
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.012*p],[(2/3*hc-0.23)*p],[0]]).rotate([1,2],[PI/2]).translate([1],[0.100*p])),
+
+			POLYLINE([[0,-0.010*p,0],[0.020*p,-0.010*p,0],[0.020*p,0.110*p,0],[0,0.110*p,0]]),
+			POLYLINE([[0,-0.010*p,0.015*p],[0.020*p,-0.010*p,0.015*p],[0.020*p,0.110*p,0.015*p],[0,0.110*p,0.015*p]]),
+			POLYLINE([[0,-0.010*p,0.030*p],[0.020*p,-0.010*p,0.030*p],[0.020*p,0.110*p,0.030*p],[0,0.110*p,0.030*p]]),
+			POLYLINE([[0,-0.010*p,0.045*p],[0.020*p,-0.010*p,0.045*p],[0.020*p,0.110*p,0.045*p],[0,0.110*p,0.045*p]]),
+			POLYLINE([[0,-0.010*p,0.060*p],[0.020*p,-0.010*p,0.060*p],[0.020*p,0.110*p,0.060*p],[0,0.110*p,0.060*p]]),
+			POLYLINE([[0,-0.010*p,0.075*p],[0.020*p,-0.010*p,0.075*p],[0.020*p,0.110*p,0.075*p],[0,0.110*p,0.075*p]]),
+			POLYLINE([[0,-0.010*p,0.090*p],[0.020*p,-0.010*p,0.090*p],[0.020*p,0.110*p,0.090*p],[0,0.110*p,0.090*p]]),
+			POLYLINE([[0,-0.010*p,0.105*p],[0.020*p,-0.010*p,0.105*p],[0.020*p,0.110*p,0.105*p],[0,0.110*p,0.105*p]]),
+			POLYLINE([[0,-0.010*p,0.120*p],[0.020*p,-0.010*p,0.120*p],[0.020*p,0.110*p,0.120*p],[0,0.110*p,0.120*p]]),
+			POLYLINE([[0,-0.010*p,0.135*p],[0.020*p,-0.010*p,0.135*p],[0.020*p,0.110*p,0.135*p],[0,0.110*p,0.135*p]]),
+			POLYLINE([[0,-0.010*p,0.150*p],[0.020*p,-0.010*p,0.150*p],[0.020*p,0.110*p,0.150*p],[0,0.110*p,0.150*p]]),
+			POLYLINE([[0,-0.010*p,0.165*p],[0.020*p,-0.010*p,0.165*p],[0.020*p,0.110*p,0.165*p],[0,0.110*p,0.160*p]]),
+			POLYLINE([[0,-0.010*p,0.180*p],[0.020*p,-0.010*p,0.180*p],[0.020*p,0.110*p,0.180*p],[0,0.110*p,0.180*p]]),
+			POLYLINE([[0,-0.010*p,0.195*p],[0.020*p,-0.010*p,0.195*p],[0.020*p,0.110*p,0.195*p],[0,0.110*p,0.190*p]]),
+			POLYLINE([[0,-0.010*p,0.210*p],[0.020*p,-0.010*p,0.210*p],[0.020*p,0.110*p,0.210*p],[0,0.110*p,0.210*p]]),
+			POLYLINE([[0,-0.010*p,0.225*p],[0.020*p,-0.010*p,0.225*p],[0.020*p,0.110*p,0.225*p],[0,0.110*p,0.225*p]]),
+			POLYLINE([[0,-0.010*p,0.240*p],[0.020*p,-0.010*p,0.240*p],[0.020*p,0.110*p,0.240*p],[0,0.110*p,0.240*p]]),
+			POLYLINE([[0,-0.010*p,0.255*p],[0.020*p,-0.010*p,0.255*p],[0.020*p,0.110*p,0.255*p],[0,0.110*p,0.255*p]]),
+			POLYLINE([[0,-0.010*p,0.270*p],[0.020*p,-0.010*p,0.270*p],[0.020*p,0.110*p,0.270*p],[0,0.110*p,0.270*p]]),
+
+			POLYLINE([[0,0,0.280*p],[0.020*p,0,0.280*p],[0.020*p,0,-0.010*p],[0,0,-0.010*p]]),
+			POLYLINE([[0,0.015*p,0.280*p],[0.020*p,0.015*p,0.280*p],[0.020*p,0.015*p,-0.010*p],[0,0.015*p,-0.010*p]]),
+			POLYLINE([[0,0.030*p,0.280*p],[0.020*p,0.030*p,0.280*p],[0.020*p,0.030*p,-0.010*p],[0,0.030*p,-0.010*p]]),
+			POLYLINE([[0,0.045*p,0.280*p],[0.020*p,0.045*p,0.280*p],[0.020*p,0.045*p,-0.010*p],[0,0.045*p,-0.010*p]]),
+			POLYLINE([[0,0.060*p,0.280*p],[0.020*p,0.060*p,0.280*p],[0.020*p,0.060*p,-0.010*p],[0,0.060*p,-0.010*p]]),
+			POLYLINE([[0,0.075*p,0.280*p],[0.020*p,0.075*p,0.280*p],[0.020*p,0.075*p,-0.010*p],[0,0.075*p,-0.010*p]]),
+			POLYLINE([[0,0.090*p,0.280*p],[0.020*p,0.090*p,0.280*p],[0.020*p,0.090*p,-0.010*p],[0,0.090*p,-0.010*p]]),
+			POLYLINE([[0,0.105*p,0.280*p],[0.020*p,0.105*p,0.280*p],[0.020*p,0.105*p,-0.010*p],[0,0.105*p,-0.010*p]]),
+
+
+		]);
+
+	lodgeWindow.translate([0,1,2],[(1.7-0.012)*p,1.15*p,(h1+h2+10*hs+0.23)*p]);
+
+/*
+	var lodgeWallPart02 = getWall(p,[[1.7,1.15,h1+h2+10*hs],[1.7,1.25,h1+h2+10*hs],[h1+h2+10*hs+0.23],[1.7,1.15,h1+h2+10*hs+0.23]]);
+	var lodgeWallPart03 = getWall(p,[[1.7,1.15,h1+h2+10*hs+2/3*hc],[1.7,1.25,x+10*hs+2/3*hc],[1.7,1.25,h1+h2+10*hs+hc],[1.7,1.15,h1+h2+10*hs+hc]]);
+	
+*/
+
+
 	// superior 
 	var singleWindow = STRUCT([
 			COLOR(colors.roof)(SIMPLEX_GRID([[-0.005*p,0.0025*p],[-0.010*p, 0.148*p],[-(0.010)*p,(hb-hc-10*hs-0.01)*p]])),
@@ -1807,6 +1868,8 @@ function buildingComponents(){
 			COLOR(colors.roof)(SIMPLEX_GRID([[-0.005*p,0.005*p],[-0.125*p, 0.035*p],[-(0.010+hb-hc-10*hs-0.035)*p, 0.005*p]])),
 			COLOR(colors.hue)(SIMPLEX_GRID([[0.005*p],[0.168*p],[(0.010)*p]])),
 		]);
+
+	singleWindow.translate([1],[-0.01*p]);
 
 	// middle windows
 	var middleWindow = STRUCT([
@@ -1827,20 +1890,85 @@ function buildingComponents(){
 		]);
 
 	middleWindow.translate([1],[-0.0025*p]);
- 
+
+
+	// little window below
+	var littleWindow = STRUCT([
+
+			COLOR(colors.white)(SIMPLEX_GRID([[0.002*p],[0.148*p],[4*hs*p]])),
+			COLOR(colors.windows)(SIMPLEX_GRID([[-0.004*p,0.002*p],[0.148*p],[4*hs*p]])),
+
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.008*p],[0.008*p],[(4*hs)*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.008*p],[-0.07*p,0.008*p],[(4*hs)*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.008*p],[0.148*p],[(0.008)*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.008*p],[-0.140*p,0.008*p],[(4*hs)*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.008*p],[0.148*p],[-(4*hs-0.008)*p,0.008*p]])),
+
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.012*p],[0.148*p],[0]])),
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.012*p],[4*hs*p],[0]]).rotate([1,2],[PI/2])),
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.012*p],[0.148*p],[0]]).translate([2],[4*hs*p])),
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.012*p],[4*hs*p],[0]]).rotate([1,2],[PI/2]).translate([1],[0.148*p])),
+
+			POLYLINE([[0.010*p,0,4*hs/2*p],[0.010*p,0.148*p,4*hs/2*p]]),
+			POLYLINE([[0.010*p,0,4*hs/4*p],[0.010*p,0.148*p,4*hs/4*p]]),
+			POLYLINE([[0.010*p,0,4*hs/4*3*p],[0.010*p,0.148*p,4*hs/4*3*p]]),
+
+			POLYLINE([[0.010*p,0.025*p,0],[0.010*p,0.025*p,4*hs*p]]),
+			POLYLINE([[0.010*p,0.050*p,0],[0.010*p,0.050*p,4*hs*p]]),
+			POLYLINE([[0.010*p,0.075*p,0],[0.010*p,0.075*p,4*hs*p]]),
+			POLYLINE([[0.010*p,0.100*p,0],[0.010*p,0.100*p,4*hs*p]]),
+			POLYLINE([[0.010*p,0.125*p,0],[0.010*p,0.125*p,4*hs*p]]),	
+		]);
+
+	littleWindow.translate([0],[-0.012*p]);
+
 	// all left components
 	var leftComponents = STRUCT([
 			doorFrame,
 			lateralLodgeDoor,
-			T([0,1,2])([2.14*p,0.66*p,(h1+h2+hb-(hb-hc-10*hs+0.010))*p])(singleWindow),
-			T([0,1,2])([2.14*p,0.67*p,(h1+h2+15*hs)*p])(middleWindow), // 67
+			lodgeWindow,
+
+			// front windows
+			T([0,1,2])([2.14*p,0.67*p,(h1+h2+hb-(hb-hc-10*hs+0.010))*p])(singleWindow),
+			T([0,1,2])([2.14*p,0.67*p,(h1+h2+15*hs)*p])(middleWindow),
+			T([0,1,2])([2.14*p,0.67*p,(h1+h2+3.5*hs)*p])(littleWindow),
+
+			// lateral windowsx
+			T([0,1,2])([0.692*p,0.42*p,(h1+h2+hb-(hb-hc-10*hs+0.010))*p])(R([0,1])(-PI/2)(singleWindow)),
+			T([0,1,2])([0.692*p,0.42*p,(h1+h2+15*hs)*p])(R([0,1])(-PI/2)(middleWindow)),
+			T([0,1,2])([0.692*p,0.42*p,(h1+h2+3.5*hs)*p])(R([0,1])(-PI/2)(littleWindow)),
+
+
+			T([0,1,2])([1.22*p,0.42*p,(h1+h2+hb-(hb-hc-10*hs+0.010))*p])(R([0,1])(-PI/2)(singleWindow)),
+			T([0,1,2])([1.22*p,0.42*p,(h1+h2+15*hs)*p])(R([0,1])(-PI/2)(middleWindow)),
+			T([0,1,2])([1.22*p,0.42*p,(h1+h2+3.5*hs)*p])(R([0,1])(-PI/2)(littleWindow)),
+
+			T([0,1,2])([1.822*p,0.42*p,(h1+h2+hb-(hb-hc-10*hs+0.010))*p])(R([0,1])(-PI/2)(singleWindow)),
+			T([0,1,2])([1.822*p,0.42*p,(h1+h2+15*hs)*p])(R([0,1])(-PI/2)(middleWindow)),
+			T([0,1,2])([1.822*p,0.42*p,(h1+h2+3.5*hs)*p])(R([0,1])(-PI/2)(littleWindow)),
+
+			// back windows
+			T([0,1,2])([0.42*p,0.7*p,(h1+h2+hb-(hb-hc-10*hs+0.010))*p])(S([0])([-1])(singleWindow)),
+			T([0,1,2])([0.42*p,0.7*p,(h1+h2+15*hs)*p])(S([0])([-1])(middleWindow)),
+			T([0,1,2])([0.42*p,0.7*p,(h1+h2+3.5*hs)*p])(S([0])([-1])(littleWindow)),
+
+			T([0,1,2])([0.42*p,1.168*p,(h1+h2+hb-(hb-hc-10*hs+0.010))*p])(S([0])([-1])(singleWindow)),
+			T([0,1,2])([0.42*p,1.168*p,(h1+h2+15*hs)*p])(S([0])([-1])(middleWindow)),
+			T([0,1,2])([0.42*p,1.168*p,(h1+h2+3.5*hs)*p])(S([0])([-1])(littleWindow)),
+
+			T([0,1,2])([0.42*p,1.436*p,(h1+h2+hb-(hb-hc-10*hs+0.010))*p])(S([0,1])([-1,0.9])(singleWindow)),
+			T([0,1,2])([0.42*p,1.436*p,(h1+h2+15*hs)*p])(S([0,1,2])([-1,0.9,0.8])(middleWindow)),
+			T([0,1,2])([0.42*p,1.436*p,(h1+h2+3.5*hs)*p])(S([0,1])([-1,0.67])(littleWindow)),
+
+
 		]);
 
+
 	return STRUCT([
+			T([0,1,2])([0.42*p,1.656*p,(h1+h2+10*hs)*p])(S([0])([-1])(middleWindow)), // central back door
 			leftComponents,
 			T([1])([3.46*p])(S([1])([-1])(leftComponents))
 		]);
-
 
 }
 
