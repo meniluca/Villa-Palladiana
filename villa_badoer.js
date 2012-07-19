@@ -25,6 +25,7 @@ function Drawer(){
 	this.colums = undefined;
 	this.guttae = undefined;
 	this.buildingRoof = undefined;
+	this.buildingComponents = undefined;
 }
 
 
@@ -128,6 +129,17 @@ Drawer.prototype.drawBuildingRoof = function(){
     return DRAW(this.buildingRoof);
 }
 
+Drawer.prototype.addBuildingComponents = function(buildingComponents){
+    this.buildingComponents = buildingComponents;
+}
+
+Drawer.prototype.drawBuildingComponents = function(){
+	if (this.buildingComponents === undefined){
+		return alert("Create the model \"buildingComponents\" before draw it!");
+	}
+	return DRAW(this.buildingComponents);
+}
+
 
 
 /*
@@ -153,6 +165,7 @@ colors.foundation 	= 	[83/255,59/255,44/255];
 colors.hue 			= 	[1,1,0.9];
 colors.baseFrontLedge = [185/255,185/255,168/255];
 colors.roof 		=	[114/255,78/255,61/255];
+colors.black 		=	[0,0,0];
 
 
 
@@ -1705,6 +1718,130 @@ function buildingRoof(){
 // finestre porte
 function buildingComponents(){
 
+	// Get proportion
+	var p = scale.proportion || 1;
+
+	// height foundation steps
+	var h1 = 0.16;
+	var h2 = 0.08885;
+	var hs = 0.01777;
+	// height building
+	var hb = 0.795+h1+h2;
+	var hc = 0.745;
+
+
+	// Control points door frame
+	var controlPoints = [[0,0,0],
+				[0.04*p,0,0],[0.04*p,0,0],
+				[0.04*p,0,0.010*p],
+				[0.045*p,0,0.010*p],[0.045*p,0,0.010*p],
+				[0.045*p,0,0.020*p],
+				[0.050*p,0,0.020*p],[0.050*p,0,0.020*p],
+				[0.0555*p,0,0.020*p],
+				[0.0555*p,0,0.030*p],[0.0555*p,0,0.030*p],
+				[0,0,0.030*p]];
+
+	var doorFrameLeftProfile = NUBS(S0)(2)([0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 11])(controlPoints);
+
+	var doorFrameMiddleProfile = NUBS(S0)(2)([0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 11])(
+			AA(function (elem) { return [elem[0], elem[1]+0.123*p, elem[2]];})(controlPoints)
+		);
+
+	// top orizontal frame
+	var doorFrameTop = BEZIER(S1)([doorFrameLeftProfile,doorFrameMiddleProfile]);
+	doorFrameTop = MAP(doorFrameTop)(domains.depthCapitalDomain); // TODO
+	doorFrameTop.translate([2],[(2/3*hc)*p]);
+
+	// lateral vertical frame
+	doorFrameMiddleProfile = NUBS(S0)(2)([0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 11])(
+			AA(function (elem) { return [elem[0], elem[1]+(2/3*hc+0.03)*p, elem[2]];})(controlPoints)
+		);
+
+	var doorFrameLateralProfile = BEZIER(S1)([doorFrameLeftProfile,doorFrameMiddleProfile]);
+	doorFrameLateralProfile = MAP(doorFrameLateralProfile)(domains.depthCapitalDomain); // TODO
+
+	var doorFrameLateral = R([1,2])(PI/2)(doorFrameLateralProfile);
+	doorFrameLateral.translate([1],[0.03*p]);
+
+	// central lodge's door
+	var doorFrame = STRUCT([
+			doorFrameTop,
+			doorFrameLateral,
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.0186*p],[-0.03*p,0.0186*p],[2/3*hc*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.0100*p],[-0.0486*p,0.1084*p],[2/3*hc*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.0186*p],[-0.0486*p,0.1084*p],[-(2/3*hc-0.0186)*p,0.0186*p]])),
+
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.0186*p],[-0.0486*p,0.1084*p],[-(2/12*hc-0.0186)*p,0.0186*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.0186*p],[-0.0486*p,0.1084*p],[-(2/4*hc-0.0186)*p,0.0186*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.0186*p],[-0.0486*p,0.1084*p],[-(2/6*hc-0.0186)*p,0.0186*p]])),
+
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.0186*p],[-0.0486*p,0.1084*p],[0.0186*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.0186*p],[-0.1084*p,0.0146*p],[2/3*hc*p]])),
+		]);
+
+	doorFrame.translate([0,1,2],[1.68*p,1.607*p,(h1+h2+10*hs)*p]);
+
+	// lateral door lodge
+	var lateralLodgeDoor = STRUCT([
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.1*p],[0.0186*p],[(0.23)*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.0186*p],[0.0235*p],[(0.23)*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[-0.0814*p, 0.0186*p],[0.0235*p],[(0.23)*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[-0.0186*p, 0.0628*p],[0.0235*p],[-(0.23-0.0186)*p,0.0186*p]])),
+		]);
+
+	lateralLodgeDoor.translate([0,1,2],[1.87*p,1.07*p,(h1+h2+10*hs)*p]);
+
+
+	// superior 
+	var singleWindow = STRUCT([
+			COLOR(colors.roof)(SIMPLEX_GRID([[-0.005*p,0.0025*p],[-0.010*p, 0.148*p],[-(0.010)*p,(hb-hc-10*hs-0.01)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[-0.005*p,0.00265*p],[-0.084*p, 0.001*p],[-(0.010)*p,(hb-hc-10*hs-0.01)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[-0.005*p,0.00265*p],[-0.035*p, 0.0005*p],[-(0.010)*p,(hb-hc-10*hs-0.01)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[-0.005*p,0.00265*p],[-0.060*p, 0.0005*p],[-(0.010)*p,(hb-hc-10*hs-0.01)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[-0.005*p,0.00265*p],[-0.109*p, 0.0005*p],[-(0.010)*p,(hb-hc-10*hs-0.01)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[-0.005*p,0.00265*p],[-0.134*p, 0.0005*p],[-(0.010)*p,(hb-hc-10*hs-0.01)*p]])),
+
+			COLOR(colors.roof)(SIMPLEX_GRID([[-0.005*p,0.005*p],[-0.0075*p, 0.035*p],[-(0.010+hb-hc-10*hs-0.105)*p, 0.005*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[-0.005*p,0.005*p],[-0.0075*p, 0.035*p],[-(0.010+hb-hc-10*hs-0.035)*p, 0.005*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[-0.005*p,0.005*p],[-0.125*p, 0.035*p],[-(0.010+hb-hc-10*hs-0.105)*p, 0.005*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[-0.005*p,0.005*p],[-0.125*p, 0.035*p],[-(0.010+hb-hc-10*hs-0.035)*p, 0.005*p]])),
+			COLOR(colors.hue)(SIMPLEX_GRID([[0.005*p],[0.168*p],[(0.010)*p]])),
+		]);
+
+	// middle windows
+	var middleWindow = STRUCT([
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.0025*p],[-0.0025*p, 0.148*p],[(hc/2-0.040)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[0.00265*p],[-0.0763*p, 0.001*p],[(hc/2-0.040)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[0.00265*p],[-0.0271*p, 0.0005*p],[(hc/2-0.040)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[0.00265*p],[-0.0517*p, 0.0005*p],[(hc/2-0.040)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[0.00265*p],[-0.1009*p, 0.0005*p],[(hc/2-0.040)*p]])),
+			COLOR(colors.black)(SIMPLEX_GRID([[0.00265*p],[-0.1255*p, 0.0005*p],[(hc/2-0.040)*p]])),
+
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.005*p],[0.035*p],			[-0.020*p,0.005*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.005*p],[0.035*p],			[-0.135*p,0.005*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.005*p],[0.035*p],			[-0.310*p,0.005*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.005*p],[-0.118*p, 0.035*p],	[-0.020*p,0.005*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.005*p],[-0.118*p, 0.035*p],	[-0.135*p,0.005*p]])),
+			COLOR(colors.roof)(SIMPLEX_GRID([[0.005*p],[-0.118*p, 0.035*p],	[-0.310*p,0.005*p]])),
+
+		]);
+
+	middleWindow.translate([1],[-0.0025*p]);
+ 
+	// all left components
+	var leftComponents = STRUCT([
+			doorFrame,
+			lateralLodgeDoor,
+			T([0,1,2])([2.14*p,0.66*p,(h1+h2+hb-(hb-hc-10*hs+0.010))*p])(singleWindow),
+			T([0,1,2])([2.14*p,0.67*p,(h1+h2+15*hs)*p])(middleWindow), // 67
+		]);
+
+	return STRUCT([
+			leftComponents,
+			T([1])([3.46*p])(S([1])([-1])(leftComponents))
+		]);
+
+
 }
 
     
@@ -1739,6 +1876,9 @@ function drawVilla(){
 
 	drawer.addBuildingRoof(buildingRoof());
 	drawer.drawBuildingRoof();
+	
+	drawer.addBuildingComponents(buildingComponents());
+	drawer.drawBuildingComponents();
 
 }
 
