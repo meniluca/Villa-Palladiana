@@ -168,7 +168,7 @@ colors.roof 		=	[114/255,78/255,61/255];
 colors.black 		=	[0,0,0];
 colors.white 		=	[1,1,1];
 colors.windows		=	[0.64,0.83,0.93,0.6];
-
+colors.grass 		= 	[34/255,139/255,34/255];
 
 
 
@@ -2118,11 +2118,19 @@ function buildingComponents(){
 
 	littleChimney.translate([0,1,2],[0.86*p,0.36*p,(h1+h2)*p]);
 
+	var grass = (SIMPLEX_GRID([[4.02*p],[3.82*p],[0.005*p]])).color(colors.grass);
+	grass.translate([0,1,2],[-0.2*p,-0.2*p,-0.0025*p]);
+
+	var pavement = (SIMPLEX_GRID([[3.08*p],[3.46*p],[0.005*p]])).color(colors.hue);
+	var pavementfront = (SIMPLEX_GRID([[-3.08*p,0.68*p],[-0.83*p,1.74*p],[0.005*p]])).color(colors.hue);
+
+
 	return STRUCT([
 			T([0,1,2])([0.42*p,1.656*p,(h1+h2+10*hs)*p])(S([0])([-1])(middleWindow)), // central back door
 			leftComponents,
 			littleChimney,
 			bigChimney,
+			grass, pavement, pavementfront,
 			T([1])([3.46*p])(S([1])([-1])(leftComponents))
 		]);
 
