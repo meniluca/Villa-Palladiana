@@ -2146,8 +2146,6 @@ function drawVilla(){
 	drawer.addBuildingWall(buildingWall());
 	drawer.drawBuildingWall();
 
-
-
 	drawer.addLedge(ledge());
 	drawer.drawLedge();
 
@@ -2156,8 +2154,6 @@ function drawVilla(){
 
 	drawer.addTympanum(tympanum());
 	drawer.drawTympanum();
-
-
 
 	drawer.addGuttae(guttae());
 	drawer.drawGuttae();
